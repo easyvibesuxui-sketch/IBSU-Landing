@@ -32,7 +32,7 @@ export function renderContent() {
   fill('[data-memories]', each('story.memories', (m, i, k) =>
     h('figure', { class: 'orb', 'data-orb': i, style: `--x:${ORB_POS[i][0]};--y:${ORB_POS[i][1]}` }, [
       h('div', { class: 'orb__ball' }, [
-        Object.assign(h('img', { src: `/media/memories/${m.k}.webp`, alt: '', loading: 'lazy', decoding: 'async' }), {
+        Object.assign(h('img', { src: `media/memories/${m.k}.webp`, alt: '', loading: 'lazy', decoding: 'async' }), {
           onerror() { this.remove(); },
         }),
       ]),

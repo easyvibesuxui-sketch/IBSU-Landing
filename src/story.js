@@ -61,7 +61,7 @@ export function initStory({ reduced, onSiteState }) {
     const small = matchMedia('(max-width: 760px)').matches;
     // VP9 is about half the size; fall back to H.264 where WebM/VP9 isn't solid (older Safari)
     const ext = video.canPlayType('video/webm; codecs="vp9"') === 'probably' ? 'webm' : 'mp4';
-    video.src = `/media/story-${small ? 720 : 1080}.${ext}`;
+    video.src = `media/story-${small ? 720 : 1080}.${ext}`;
     video.addEventListener('loadeddata', () => { hasVideo = true; story.classList.add('has-video'); }, { once: true });
     video.addEventListener('error', () => { hasVideo = false; }, { once: true });
     video.load();
