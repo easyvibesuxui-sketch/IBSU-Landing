@@ -11,6 +11,14 @@ const SCREEN_RECT = { x: 0.2821, y: 0.4125, w: 0.1682, h: 0.1838 };
 const SCREEN_QUAD = [[0, 3.5], [82.5, 0], [100, 78.7], [11.4, 100]];
 const FULL_QUAD = [[0, 0], [100, 0], [100, 100], [0, 100]];
 const FRAME_ASPECT = 16 / 9;
+// Where the subject is (x as a fraction of the frame) over video time 0 → 1. On narrow screens
+// object-fit: cover crops most of the 16:9 frame, so the visible window follows him.
+const FOCUS = [[0, 0.13], [0.2, 0.2], [0.25, 0.28], [0.5, 0.46], [0.75, 0.54], [0.8, 0.68], [0.86, 0.64], [0.92, 0.45], [1, 0.4]];
+const focusAt = (t) => {
+  const i = Math.max(1, FOCUS.findIndex(([k]) => k >= t));
+  const [t0, x0] = FOCUS[i - 1], [t1, x1] = FOCUS[i];
+  return x0 + (x1 - x0) * clamp01((t - t0) / (t1 - t0 || 1));
+};
 const CHAPTERS = [[0.01, 0.12], [0.13, 0.25], [0.28, 0.52], [0.56, 0.74]];
 const MEMORIES = [0.22, 0.62];     // core-memory orbs drift past while he grows up
 const AGE = [[0.2, 6], [0.6, 17]];
@@ -51,7 +59,9 @@ export function initStory({ reduced, onSiteState }) {
   let shownTime = 0;
   if (!reduced) {
     const small = matchMedia('(max-width: 760px)').matches;
-    video.src = small ? '/media/story-720.mp4' : '/media/story-1080.mp4';
+    // VP9 is about half the size; fall back to H.264 where WebM/VP9 isn't solid (older Safari)
+    const ext = video.canPlayType('video/webm; codecs="vp9"') === 'probably' ? 'webm' : 'mp4';
+    video.src = `/media/story-${small ? 720 : 1080}.${ext}`;
     video.addEventListener('loadeddata', () => { hasVideo = true; story.classList.add('has-video'); }, { once: true });
     video.addEventListener('error', () => { hasVideo = false; }, { once: true });
     video.load();
@@ -78,6 +88,13 @@ export function initStory({ reduced, onSiteState }) {
   function render(p) {
     // media
     const vp = range(p, 0, VIDEO_END);
+    const W = stage.clientWidth, H = stage.clientHeight;
+    const fw = Math.max(W, H * FRAME_ASPECT), fh = fw / FRAME_ASPECT;
+    const overflow = fw - W;
+    const left = overflow ? clamp01((focusAt(vp) * fw - W / 2) / overflow) : 0.5; // object-position x
+    const pos = `${left * 100}% 50%`;
+    video.style.objectPosition = pos;
+    frames.forEach((img) => { img.style.objectPosition = pos; });
     if (hasVideo && video.duration) targetTime = vp * (video.duration - 0.05);
     if (!hasVideo) {
       const f = vp * (frames.length - 1);
@@ -117,9 +134,7 @@ export function initStory({ reduced, onSiteState }) {
     hud.style.opacity = 1 - range(p, SCREEN[0] - 0.04, SCREEN[0]);
 
     // laptop screen → live hero: map the screen rect through object-fit: cover
-    const W = stage.clientWidth, H = stage.clientHeight;
-    const fw = Math.max(W, H * FRAME_ASPECT), fh = fw / FRAME_ASPECT;
-    const rx = (W - fw) / 2 + SCREEN_RECT.x * fw, ry = (H - fh) / 2 + SCREEN_RECT.y * fh;
+    const rx = -overflow * left + SCREEN_RECT.x * fw, ry = (H - fh) / 2 + SCREEN_RECT.y * fh;
     const rw = SCREEN_RECT.w * fw, rh = SCREEN_RECT.h * fh;
     const on = range(p, SITE_ON[0], SITE_ON[1]);
     const s = range(p, SCREEN[0], SCREEN[1]);

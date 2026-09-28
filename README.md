@@ -25,15 +25,9 @@ The story timeline is set by the constants at the top of `src/story.js`.
 
 ## Media
 The Kling sources go in `assets-src/`, and `npm run encode` writes `public/media/`:
-- `assets-src/clips/c1.mp4` … `c5.mp4` become `story-1080.mp4` and `story-720.mp4`. They are encoded all-intra, so scrubbing seeks instantly.
-- `assets-src/keyframes/k1.png` … `k6.png` become `frames/k*.webp`. These are used as the fallback before the video loads and for reduced motion.
+- `assets-src/clips/c1.mp4` … `c4.mp4` become `story-{1080,720}.webm` (VP9, preferred) and `.mp4` (H.264 fallback). They are encoded with a short GOP (keyframe every 8 frames), so scrubbing seeks quickly.
+- `assets-src/keyframes/k1.png` … `k5.png` become `frames/k*.webp`. These are used as the fallback before the video loads and for reduced motion.
 - `assets-src/memories/{kindergarten,school,sport,parents,grandparents,friends}.png` become the memory orbs.
 
-## Content still to verify against ibsu.edu.ge/entrant
-Everything marked **TBC** in `src/content/*.json` still needs checking:
-- tuition
-- discounts and scholarships
-- key dates
-- school names and their programme mapping
-- the international admission text
-- the address
+## Content
+The copy in `src/content/{en,ka}.json` and the programme and fee data in `src/content/programs.js` come from [ibsu.edu.ge/entrant](https://ibsu.edu.ge/entrant/) as of 2026-09-28. That covers fees, internal grants, code 064, trainings and contacts. Re-check these every admission season.

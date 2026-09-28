@@ -26,13 +26,22 @@ const clips = list(join(src, 'clips'), '.mp4');
 if (clips.length) {
   const listFile = join(src, 'clips', 'concat.txt');
   writeFileSync(listFile, clips.map((c) => `file '${c}'`).join('\n'));
-  // Every frame a keyframe (-g 1) so currentTime seeks land instantly in both directions.
-  for (const [h, crf] of [[1080, 24], [720, 27]]) {
+  // Short GOP (keyframe every 8 frames, no B-frames) so currentTime seeks decode at most a few frames.
+  for (const [h, crf] of [[1080, 23], [720, 26]]) {
     run([
       '-f', 'concat', '-safe', '0', '-i', listFile, '-an',
       '-vf', `scale=-2:${h},fps=24`,
-      '-c:v', 'libx264', '-preset', 'slow', '-crf', String(crf), '-g', '1', '-pix_fmt', 'yuv420p',
+      '-c:v', 'libx264', '-preset', 'slow', '-crf', String(crf), '-g', '8', '-bf', '0', '-pix_fmt', 'yuv420p',
       '-movflags', '+faststart', join(out, `story-${h}.mp4`),
+    ]);
+  }
+  // VP9 twin for browsers without H.264 (e.g. open-source Chromium builds)
+  for (const [h, crf] of [[1080, 36], [720, 38]]) {
+    run([
+      '-f', 'concat', '-safe', '0', '-i', listFile, '-an',
+      '-vf', `scale=-2:${h},fps=24`,
+      '-c:v', 'libvpx-vp9', '-b:v', '0', '-crf', String(crf), '-g', '8', '-row-mt', '1', '-deadline', 'good', '-cpu-used', '4',
+      '-pix_fmt', 'yuv420p', join(out, `story-${h}.webm`),
     ]);
   }
   console.log(`encoded ${clips.length} clips`);
