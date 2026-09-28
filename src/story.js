@@ -11,9 +11,9 @@ const SCREEN_RECT = { x: 0.2821, y: 0.4125, w: 0.1682, h: 0.1838 };
 const SCREEN_QUAD = [[0, 3.5], [82.5, 0], [100, 78.7], [11.4, 100]];
 const FULL_QUAD = [[0, 0], [100, 0], [100, 100], [0, 100]];
 const FRAME_ASPECT = 16 / 9;
-const CHAPTERS = [[0.015, 0.15], [0.18, 0.31], [0.36, 0.56], [0.6, 0.76]];
-const MEMORIES = [0.3, 0.68];     // core-memory orbs drift past while he grows up
-const AGE = [[0.2, 6], [0.64, 17]];
+const CHAPTERS = [[0.01, 0.12], [0.13, 0.25], [0.28, 0.52], [0.56, 0.74]];
+const MEMORIES = [0.22, 0.62];     // core-memory orbs drift past while he grows up
+const AGE = [[0.2, 6], [0.6, 17]];
 
 const clamp01 = (v) => Math.min(1, Math.max(0, v));
 const range = (p, a, b) => clamp01((p - a) / (b - a));
