@@ -19,8 +19,8 @@
     <nav class="nav__pill nav__links" aria-label="Sections">
       <a href="#programs" data-i18n="nav.programs">Programmes</a>
       <a href="#admission" data-i18n="nav.admission">Admission</a>
-      <a href="#tuition" data-i18n="nav.tuition">Tuition</a>
-      <a href="#dates" data-i18n="nav.dates">Dates</a>
+      <a href="#tuition" data-i18n="nav.tuition">Grants</a>
+      <a href="#explore" data-i18n="nav.explore">Explore</a>
       <a href="#faq" data-i18n="nav.faq">FAQ</a>
     </nav>
     <div class="nav__right">
@@ -103,9 +103,14 @@
           <h2 class="section__title" data-i18n="programs.title" data-split></h2>
           <p class="section__lede" data-i18n="programs.lede"></p>
         </header>
-        <div class="filters" role="tablist" data-filters></div>
+        <div class="filters" role="group" data-filters></div>
         <ul class="programs__grid" data-programs></ul>
-        <a class="link-arrow" href="https://ibsu.edu.ge/en/entrant/catalog-of-programs/" target="_blank" rel="noopener"><span data-i18n="programs.more">See full catalogue</span> →</a>
+        <div class="catalogue">
+          <p class="eyebrow" data-i18n="programs.catalogue"></p>
+          <a class="chip-link" href="https://ibsu.edu.ge/wp-content/uploads/2025/02/BA-PROG-IN-ENG.pdf" target="_blank" rel="noopener" data-i18n="programs.catEn"></a>
+          <a class="chip-link" href="https://ibsu.edu.ge/wp-content/uploads/2025/03/Catalogue-of-Bachelors-Programs-delivered-in-Georgian.pdf" target="_blank" rel="noopener" data-i18n="programs.catKa"></a>
+          <a class="chip-link" href="https://ibsu.edu.ge/wp-content/uploads/2025/01/Medicine-ENG.pdf" target="_blank" rel="noopener" data-i18n="programs.catMed"></a>
+        </div>
       </div>
     </section>
 
@@ -114,10 +119,11 @@
         <header class="section__head admission__head">
           <p class="eyebrow marker" data-i18n="admission.eyebrow">Admission</p>
           <h2 class="section__title" data-i18n="admission.title" data-split></h2>
+          <p class="code"><span class="eyebrow" data-i18n="admission.code"></span><b>064</b></p>
           <aside class="intl">
             <h3 data-i18n="admission.intl.title"></h3>
             <p data-i18n="admission.intl.body"></p>
-            <a class="link-arrow link-arrow--inv" href="https://ibsu.edu.ge/en/entrant/" target="_blank" rel="noopener"><span data-i18n="admission.intl.cta"></span> →</a>
+            <a class="link-arrow link-arrow--inv" href="https://ibsu.edu.ge/en/entrant/tuition-fees/" target="_blank" rel="noopener"><span data-i18n="admission.intl.cta"></span> →</a>
           </aside>
         </header>
         <ol class="steps" data-steps></ol>
@@ -131,18 +137,46 @@
           <h2 class="section__title" data-i18n="tuition.title" data-split></h2>
           <p class="section__lede" data-i18n="tuition.lede"></p>
         </header>
-        <ul class="fees" data-fees></ul>
-        <a class="link-arrow" href="https://ibsu.edu.ge/en/entrant/tuition-fees/" target="_blank" rel="noopener"><span data-i18n="tuition.cta"></span> →</a>
+        <form class="calc" data-calc onsubmit="return false">
+          <div class="calc__inputs">
+            <label class="calc__label" for="calc-program" data-i18n="tuition.program"></label>
+            <div class="select"><select id="calc-program" data-calc-program></select></div>
+            <fieldset class="calc__grants">
+              <legend class="calc__label" data-i18n="tuition.grants"></legend>
+              <div data-calc-grants></div>
+            </fieldset>
+          </div>
+          <output class="calc__result" for="calc-program" aria-live="polite">
+            <div class="calc__row"><span data-i18n="tuition.full"></span><s data-calc-full></s></div>
+            <div class="calc__row"><span data-i18n="tuition.grant"></span><b data-calc-grant></b></div>
+            <div class="calc__pay">
+              <span class="eyebrow" data-i18n="tuition.pay"></span>
+              <strong><span data-calc-pay>0</span> ₾</strong>
+              <span class="calc__per" data-i18n="tuition.year"></span>
+              <span class="calc__monthly" data-calc-monthly></span>
+            </div>
+            <p class="calc__note" data-i18n="tuition.keep"></p>
+          </output>
+        </form>
+        <a class="link-arrow" href="https://ibsu.edu.ge/entrant/calculation/" target="_blank" rel="noopener"><span data-i18n="tuition.cta"></span> →</a>
       </div>
     </section>
 
-    <section class="section section--blue dates" id="dates">
+    <section class="section section--blue explore" id="explore">
       <div class="wrap">
         <header class="section__head">
-          <p class="eyebrow marker" data-i18n="dates.eyebrow"></p>
-          <h2 class="section__title" data-i18n="dates.title" data-split></h2>
+          <p class="eyebrow marker" data-i18n="explore.eyebrow"></p>
+          <h2 class="section__title" data-i18n="explore.title" data-split></h2>
         </header>
-        <ol class="timeline" data-dates></ol>
+        <ul class="explore__cards" data-explore></ul>
+        <div class="trainings">
+          <div class="trainings__head">
+            <h3 data-i18n="explore.trainings"></h3>
+            <a class="link-arrow link-arrow--inv" href="https://ibsu.edu.ge/entrant/seasonal-schools/" target="_blank" rel="noopener"><span data-i18n="explore.trainingsCta"></span> →</a>
+          </div>
+          <div class="marquee" aria-hidden="true"><div class="marquee__track" data-marquee></div></div>
+          <ul class="sr-only" data-trainings></ul>
+        </div>
       </div>
     </section>
 
@@ -162,7 +196,7 @@
         <h2 class="finale__title" data-i18n="cta.title" data-split></h2>
         <div class="hero__ctas">
           <a class="btn btn--yellow btn--xl" href="https://ibsu.edu.ge/en/entrant/" target="_blank" rel="noopener" data-i18n="cta.apply"></a>
-          <a class="btn btn--ghost" href="https://ibsu.edu.ge/en/contact/" target="_blank" rel="noopener" data-i18n="cta.contact"></a>
+          <a class="btn btn--ghost" href="tel:+995322800064" data-i18n="cta.contact"></a>
         </div>
         <p class="finale__addr eyebrow" data-i18n="cta.address"></p>
       </div>

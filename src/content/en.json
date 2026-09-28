@@ -1,14 +1,14 @@
 {
   "meta": {
     "title": "IBSU — Applicants",
-    "description": "Everything a future IBSU student needs: programmes, admission steps, tuition, scholarships and key dates at International Black Sea University, Tbilisi."
+    "description": "Programmes, tuition, internal grants and admission steps for future students of International Black Sea University, Tbilisi."
   },
   "nav": {
     "skip": "Skip the story",
     "programs": "Programmes",
     "admission": "Admission",
-    "tuition": "Tuition",
-    "dates": "Dates",
+    "tuition": "Grants",
+    "explore": "Explore",
     "faq": "FAQ",
     "apply": "Apply",
     "lang": "GE",
@@ -45,91 +45,116 @@
     "stats": [
       { "value": "1995", "label": "Founded in Tbilisi" },
       { "value": "5", "label": "Schools, one courtyard" },
-      { "value": "EN", "label": "Taught in English" },
-      { "value": "MIT", "label": "Partnership with MIT" }
+      { "value": "18", "label": "Bachelor’s programmes" },
+      { "value": "50%", "label": "Top internal grant" }
     ]
   },
+  "schools": {
+    "business": "School of Business",
+    "csa": "Computer Science & Architecture",
+    "ehss": "Education, Humanities & Social Sciences",
+    "law": "Law & State Governance",
+    "medicine": "Medicine"
+  },
+  "langs": { "ka": "Georgian", "en": "English" },
   "programs": {
     "eyebrow": "Programmes",
     "title": "Choose the story you want to write.",
-    "lede": "Bachelor’s programmes across IBSU’s schools. Filter by school to see what fits you.",
-    "all": "All",
-    "degree": "Bachelor’s",
-    "more": "See full catalogue",
-    "schools": [
-      { "id": "business", "name": "Business" },
-      { "id": "tech", "name": "Computer Science & Engineering" },
-      { "id": "social", "name": "Social Sciences & Humanities" },
-      { "id": "law", "name": "Law" },
-      { "id": "education", "name": "Education" }
-    ],
-    "items": [
-      { "school": "business", "name": "Management" },
-      { "school": "business", "name": "Marketing" },
-      { "school": "business", "name": "Finance" },
-      { "school": "business", "name": "Accounting & Audit" },
-      { "school": "business", "name": "Tourism" },
-      { "school": "tech", "name": "Computer Science" },
-      { "school": "tech", "name": "Industrial Management & Technologies" },
-      { "school": "social", "name": "International Relations" },
-      { "school": "social", "name": "English Philology" },
-      { "school": "social", "name": "American Studies" },
-      { "school": "social", "name": "Economics" },
-      { "school": "social", "name": "Public Administration" },
-      { "school": "law", "name": "Law" }
-    ]
+    "lede": "18 bachelor’s programmes across five schools, taught in Georgian, English or both. Prices are annual tuition before grants.",
+    "all": "All schools",
+    "perYear": "/ year",
+    "taught": "Taught in",
+    "catalogue": "Programme catalogues",
+    "catKa": "Georgian-taught (PDF)",
+    "catEn": "English-taught (PDF)",
+    "catMed": "Medicine (PDF)",
+    "names": {
+      "marketing": "Marketing",
+      "management": "Management",
+      "finance": "Finance",
+      "accounting": "Accounting & Audit",
+      "economics": "Economics",
+      "tourism": "Tourism",
+      "cs": "Computer Science & AI",
+      "architecture": "Architecture",
+      "graphic": "Graphic Design",
+      "ir": "International Relations",
+      "psychology": "Psychology",
+      "pr": "Public Relations",
+      "journalism": "Journalism",
+      "english": "English Philology",
+      "american": "American Studies",
+      "law": "Law",
+      "publicadmin": "Public Administration & State Governance",
+      "medicine": "Medicine (MD)"
+    }
   },
   "admission": {
     "eyebrow": "Admission",
     "title": "Four steps to your first day.",
+    "code": "University code",
     "steps": [
-      { "title": "Sit the Unified National Exams", "body": "Georgian applicants enter IBSU through the Unified National Exams. Register with the National Assessment and Examinations Center (NAEC)." },
-      { "title": "Choose IBSU and your programme", "body": "List IBSU and your chosen programme among your priorities during NAEC registration." },
-      { "title": "Get your results", "body": "Enrolment is based on your exam scores. Results are published by NAEC." },
-      { "title": "Enrol and sign your contract", "body": "Bring your documents to IBSU, sign the study contract and join orientation week." }
+      { "title": "Register for the Unified National Exams", "body": "Admission to IBSU is based on the results of the Unified National Exams, run by the National Assessment and Examinations Center (NAEC)." },
+      { "title": "Put IBSU — code 064 — first", "body": "When you list programmes during registration, give IBSU first place. It matters for enrolment, and it earns you a 20% IBSU Priority grant." },
+      { "title": "Sit the exams and get your results", "body": "Your scores decide enrolment — and whether you land in the TOP 50 or TOP 51–150 for a 50% or 25% grant." },
+      { "title": "Enrol at IBSU", "body": "Sign your contract, choose a payment plan — Georgian citizens can spread tuition over 8 months — and start your first semester." }
     ],
     "intl": {
       "title": "Applying from abroad?",
-      "body": "International applicants apply directly to IBSU with their school certificate and English-language proof. Our admissions team will guide you through recognition and visas.",
-      "cta": "International admission"
+      "body": "International students pay $4,900 a year with scholarships of up to $1,000 ($5,900 and up to $500 for Medicine).",
+      "cta": "Tuition for international students"
     }
   },
   "tuition": {
-    "eyebrow": "Tuition & scholarships",
-    "title": "An investment in your next forty years.",
-    "lede": "Tuition depends on the programme. Strong exam results and achievements can unlock discounts and scholarships.",
-    "cards": [
-      { "title": "Annual tuition", "value": "TBC", "note": "Per programme — see the full fee table." },
-      { "title": "Exam-score discounts", "value": "TBC", "note": "Based on your Unified National Exam results." },
-      { "title": "Scholarships", "value": "TBC", "note": "Merit, social and sports scholarships." }
-    ],
-    "cta": "Full fee table"
+    "eyebrow": "Tuition & internal grants",
+    "title": "See what you’d really pay.",
+    "lede": "Pick a programme and the grants you qualify for. Only the highest single grant applies.",
+    "program": "Programme",
+    "grants": "Your grants",
+    "full": "Full tuition",
+    "grant": "Grant",
+    "pay": "You pay",
+    "year": "per year",
+    "monthly": "or {x} ₾ × 8 months",
+    "none": "No grant selected",
+    "keep": "To keep a grant, your GPA must stay above 71 at the end of each year.",
+    "list": {
+      "top50": { "title": "TOP 50", "body": "Among the top 50 students enrolled through the national exams." },
+      "gold": { "title": "Gold medal", "body": "You graduated school with a gold medal." },
+      "top150": { "title": "TOP 51–150", "body": "Among students ranked 51–150 at enrolment." },
+      "priority": { "title": "IBSU Priority", "body": "You listed IBSU first at exam registration." },
+      "creative": { "title": "Creative tour", "body": "Architecture or Graphic Design — pass IBSU’s creative tour." }
+    },
+    "cta": "Official fees & calculator"
   },
-  "dates": {
-    "eyebrow": "Key dates",
-    "title": "Mark your calendar.",
-    "items": [
-      { "date": "TBC", "title": "National exam registration opens" },
-      { "date": "TBC", "title": "Unified National Exams" },
-      { "date": "TBC", "title": "Results & enrolment" },
-      { "date": "TBC", "title": "Orientation week & first lectures" }
-    ]
+  "explore": {
+    "eyebrow": "Before you apply",
+    "title": "Try IBSU on before it’s yours.",
+    "cards": [
+      { "k": "open", "title": "Open Day", "body": "Visit the campus and get your questions answered in person.", "cta": "Register" },
+      { "k": "career", "title": "Career guidance", "body": "Advice and practical exercises from successful specialists to help you plan your career.", "cta": "Get access" },
+      { "k": "profession", "title": "Choose a profession", "body": "Take the tests and find out which field fits you best.", "cta": "Take the test" }
+    ],
+    "trainings": "Trainings for pupils",
+    "trainingsCta": "All trainings",
+    "trainingList": ["Debate championship", "First step in architecture", "Digital school", "American studies", "Business ABC", "Journalism for pupils", "Ask a psychologist", "Geopolitical games", "Mock trial", "The art of negotiation", "State organisation", "Project management", "Public speaking championship", "EconoMind", "Model UN"]
   },
   "faq": {
     "eyebrow": "FAQ",
     "title": "Questions applicants ask.",
     "items": [
-      { "q": "Are all programmes taught in English?", "a": "IBSU is Georgia’s first English-language university. Language of instruction is listed for each programme in the catalogue." },
-      { "q": "Which exams do I need?", "a": "Georgian applicants take the Unified National Exams; the required subjects depend on the programme you choose." },
-      { "q": "Can I get a scholarship?", "a": "Yes — IBSU offers discounts and scholarships based on exam results and achievements. See Tuition & scholarships." },
-      { "q": "I studied abroad. Can I apply?", "a": "Yes. International applicants apply directly to IBSU; the admissions team will help with document recognition." }
+      { "q": "How do I get into IBSU?", "a": "Through the Unified National Exams. When you register, put IBSU (code 064) first in your list of programmes." },
+      { "q": "Can I study in English?", "a": "Yes. IBSU is Georgia’s first English-language university. Programmes are taught in English, Georgian or both — each card above shows the language." },
+      { "q": "Can I combine grants?", "a": "No — if you qualify for two or more internal grants, the highest one applies." },
+      { "q": "How do I keep my grant?", "a": "Keep your GPA above 71 at the end of every academic year." },
+      { "q": "Can I pay in instalments?", "a": "Georgian citizens can spread tuition over 8 months with a flexible payment schedule." }
     ]
   },
   "cta": {
     "title": "Ready to write your next chapter?",
     "apply": "Apply to IBSU",
-    "contact": "Talk to admissions",
-    "address": "David Agmashenebeli Alley 13km, 2, Tbilisi, Georgia"
+    "contact": "+995 322 800 064",
+    "address": "D. Aghmashenebeli Alley, 13th km, 2, Tbilisi · Mon–Fri 9:00–18:00"
   },
   "footer": {
     "rights": "International Black Sea University",

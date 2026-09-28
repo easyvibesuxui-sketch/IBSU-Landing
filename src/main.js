@@ -75,7 +75,7 @@ document.querySelectorAll('a[href^="#"]:not([data-start]):not([data-skip-story])
 );
 
 // ── Reveals: groups flip .is-in once; children stagger via --i in CSS
-const revealGroups = ['.section__head', '[data-stats]', '[data-programs]', '[data-steps]', '[data-fees]', '[data-dates]', '[data-faq]', '.finale__inner'];
+const revealGroups = ['.section__head', '[data-stats]', '[data-programs]', '[data-steps]', '[data-explore]', '.calc', '[data-faq]', '.finale__inner'];
 document.querySelectorAll(revealGroups.join(',')).forEach((el) =>
   ScrollTrigger.create({ trigger: el, start: 'top 82%', once: true, onEnter: () => el.classList.add('is-in') }),
 );
@@ -94,13 +94,6 @@ if (!reduced) {
   document.querySelectorAll('.steps__fill').forEach((line) =>
     gsap.to(line, { scaleX: 1, ease: 'none', scrollTrigger: { trigger: line.parentElement, start: 'top 85%', end: 'top 45%', scrub: true } }),
   );
-
-  // Dates: amber line runs along the timeline
-  const tl = document.querySelector('.timeline__line');
-  gsap.to(tl, {
-    scaleX: 1, scaleY: 1, ease: 'none',
-    scrollTrigger: { trigger: '.timeline', start: 'top 80%', end: 'bottom 55%', scrub: true },
-  });
 
   // Stats count up
   document.querySelectorAll('[data-stats] b').forEach((b) => {

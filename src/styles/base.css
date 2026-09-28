@@ -117,3 +117,6 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 .footer__inner { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding-block: 28px; }
 .footer a { text-decoration: none; }
 .footer a:hover { color: #fff; }
+
+/* Mkhedruli has no case and reads poorly with wide tracking */
+:lang(ka) .eyebrow { letter-spacing: .03em; text-transform: none; font-size: .85rem; }
