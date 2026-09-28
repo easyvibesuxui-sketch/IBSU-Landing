@@ -1,0 +1,40 @@
+/* IBSU Design — core + semantic accents (one job per colour) */
+:root {
+  --ox-blue: #00205c;
+  --ox-mid: #1e62b3;
+  --ink: #10202f;
+  --paper: #ffffff;
+  --gray: #eef0f2;
+  --mute: #52606e;
+
+  --amber: #f15f2e;   /* news & time: dates, deadlines, badges */
+  --yellow: #ffcb2e;  /* action: primary CTA only */
+  --pop: #e0357e;     /* wayfinding: section markers, links, dots, rules */
+
+  --void: #020a1c;    /* story stage — ox-blue pushed toward black */
+  --line: color-mix(in srgb, var(--ink) 12%, transparent);
+  --line-inv: color-mix(in srgb, var(--paper) 18%, transparent);
+
+  --serif: "Source Serif 4 Variable", "Noto Serif Georgian", Georgia, serif;
+  --sans: "Hanken Grotesk Variable", "Noto Sans Georgian", system-ui, sans-serif;
+  --mono: "Spline Sans Mono", ui-monospace, monospace;
+
+  --step--1: clamp(0.84rem, 0.8rem + 0.15vw, 0.94rem);
+  --step-0: clamp(1rem, 0.96rem + 0.2vw, 1.125rem);
+  --step-1: clamp(1.25rem, 1.1rem + 0.6vw, 1.6rem);
+  --step-2: clamp(1.6rem, 1.3rem + 1.3vw, 2.4rem);
+  --step-3: clamp(2.2rem, 1.6rem + 2.6vw, 3.8rem);
+  --step-4: clamp(2.8rem, 1.8rem + 4.4vw, 5.6rem);
+
+  --gutter: clamp(16px, 5vw, 72px);
+  --maxw: 1320px;
+  --radius: 14px;
+  --pill: 999px;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Georgian: Source Serif / Hanken lack Mkhedruli — lead with Noto */
+:lang(ka) {
+  --serif: "Noto Serif Georgian", "Source Serif 4 Variable", Georgia, serif;
+  --sans: "Noto Sans Georgian", "Hanken Grotesk Variable", system-ui, sans-serif;
+}

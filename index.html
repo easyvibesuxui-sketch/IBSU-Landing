@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title data-i18n="meta.title">IBSU — Applicants</title>
+  <meta name="description" data-i18n-attr="content:meta.description" content="" />
+  <meta name="theme-color" content="#020a1c" />
+  <link rel="preload" as="image" href="/media/frames/k1.webp" />
+</head>
+<body>
+  <a class="skip-link" href="#main" data-i18n="nav.skip">Skip the story</a>
+
+  <!-- ─────────── Nav ─────────── -->
+  <header class="nav" data-phase="story" data-tone="dark">
+    <a class="nav__logo" href="#top" aria-label="IBSU">
+      <svg viewBox="0 0 64 40" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6"><ellipse cx="32" cy="17" rx="13" ry="13"/><path d="M19 17h26M32 4c-5 4-5 22 0 26M32 4c5 4 5 22 0 26M21 10h22M21 24h22"/><path d="M2 12h14M2 17h13M2 22h14M48 12h14M49 17h13M48 22h14" stroke-width="1.2"/></g><text x="32" y="39" text-anchor="middle" font-family="Source Serif 4 Variable, serif" font-size="9" fill="currentColor" letter-spacing="1">IBSU</text></svg>
+    </a>
+    <nav class="nav__pill nav__links" aria-label="Sections">
+      <a href="#programs" data-i18n="nav.programs">Programmes</a>
+      <a href="#admission" data-i18n="nav.admission">Admission</a>
+      <a href="#tuition" data-i18n="nav.tuition">Tuition</a>
+      <a href="#dates" data-i18n="nav.dates">Dates</a>
+      <a href="#faq" data-i18n="nav.faq">FAQ</a>
+    </nav>
+    <div class="nav__right">
+      <button class="nav__pill nav__lang" type="button" data-lang-toggle data-i18n-attr="aria-label:nav.langLabel">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.3" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M1.7 8h12.6M8 1.7c-2.2 2.2-2.2 10.4 0 12.6M8 1.7c2.2 2.2 2.2 10.4 0 12.6" fill="none" stroke="currentColor" stroke-width="1.1"/></svg>
+        <span data-i18n="nav.lang">GE</span>
+      </button>
+      <a class="nav__pill nav__apply" href="#apply" data-i18n="nav.apply">Apply</a>
+      <a class="nav__pill nav__skip" href="#hero-end" data-skip-story>
+        <span data-i18n="nav.skip">Skip the story</span>
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v10M3.5 8.5 8 13l4.5-4.5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+      </a>
+    </div>
+  </header>
+
+  <!-- ─────────── Story (pinned, scroll-scrubbed) ─────────── -->
+  <section class="story" id="top" aria-label="IBSU story">
+    <div class="story__stage">
+      <div class="story__frames" aria-hidden="true">
+        <img src="/media/frames/k1.webp" alt="" data-frame="0" />
+        <img src="/media/frames/k2.webp" alt="" data-frame="1" />
+        <img src="/media/frames/k3.webp" alt="" data-frame="2" />
+        <img src="/media/frames/k4.webp" alt="" data-frame="3" />
+        <img src="/media/frames/k5.webp" alt="" data-frame="4" />
+        <img src="/media/frames/k6.webp" alt="" data-frame="5" />
+      </div>
+      <video class="story__video" muted playsinline preload="auto" aria-hidden="true" tabindex="-1"></video>
+      <div class="story__grain" aria-hidden="true"></div>
+      <div class="story__vignette" aria-hidden="true"></div>
+
+      <div class="story__memories" data-memories></div>
+
+      <div class="story__captions" data-chapters></div>
+
+      <div class="story__hud" aria-hidden="true">
+        <div class="story__age"><span data-i18n="story.age">Age</span> <b data-age>06</b></div>
+        <div class="story__progress"><i data-progress></i></div>
+        <div class="story__hint" data-hint><span data-i18n="story.scroll">Scroll to begin</span><i></i></div>
+      </div>
+
+      <!-- The laptop screen becomes the live site -->
+      <div class="screen" data-screen>
+        <section class="hero" aria-labelledby="hero-title">
+          <div class="hero__bg" aria-hidden="true"><img src="/media/campus.webp" alt="" /></div>
+          <div class="hero__inner">
+            <p class="eyebrow eyebrow--pop" data-i18n="hero.eyebrow">International Black Sea University · Tbilisi</p>
+            <h1 class="hero__title" id="hero-title" data-i18n="hero.title">Georgia’s first English-language university.</h1>
+            <p class="hero__lede" data-i18n="hero.lede"></p>
+            <div class="hero__ctas">
+              <a class="btn btn--yellow btn--xl" href="#why" data-start>
+                <span data-i18n="hero.start">Start</span>
+                <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 5.5 15.5 10 11 14.5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
+              </a>
+              <a class="btn btn--ghost" href="#apply" data-i18n="hero.apply">Apply to IBSU</a>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </section>
+  <div id="hero-end" aria-hidden="true"></div>
+
+  <!-- ─────────── Content ─────────── -->
+  <main id="main">
+    <section class="section section--paper why" id="why">
+      <div class="wrap">
+        <header class="section__head">
+          <p class="eyebrow marker" data-i18n="why.eyebrow">Why IBSU</p>
+          <h2 class="section__title" data-i18n="why.title" data-split>Your chapter starts here.</h2>
+        </header>
+        <ul class="stats" data-stats></ul>
+      </div>
+      <figure class="why__photo" aria-hidden="true"><img src="/media/campus.webp" alt="" data-parallax="-12" /></figure>
+    </section>
+
+    <section class="section section--gray programs" id="programs">
+      <div class="wrap">
+        <header class="section__head">
+          <p class="eyebrow marker" data-i18n="programs.eyebrow">Programmes</p>
+          <h2 class="section__title" data-i18n="programs.title" data-split></h2>
+          <p class="section__lede" data-i18n="programs.lede"></p>
+        </header>
+        <div class="filters" role="tablist" data-filters></div>
+        <ul class="programs__grid" data-programs></ul>
+        <a class="link-arrow" href="https://ibsu.edu.ge/en/entrant/catalog-of-programs/" target="_blank" rel="noopener"><span data-i18n="programs.more">See full catalogue</span> →</a>
+      </div>
+    </section>
+
+    <section class="section section--ink admission" id="admission">
+      <div class="wrap admission__grid">
+        <header class="section__head admission__head">
+          <p class="eyebrow marker" data-i18n="admission.eyebrow">Admission</p>
+          <h2 class="section__title" data-i18n="admission.title" data-split></h2>
+          <aside class="intl">
+            <h3 data-i18n="admission.intl.title"></h3>
+            <p data-i18n="admission.intl.body"></p>
+            <a class="link-arrow link-arrow--inv" href="https://ibsu.edu.ge/en/entrant/" target="_blank" rel="noopener"><span data-i18n="admission.intl.cta"></span> →</a>
+          </aside>
+        </header>
+        <ol class="steps" data-steps></ol>
+      </div>
+    </section>
+
+    <section class="section section--paper tuition" id="tuition">
+      <div class="wrap">
+        <header class="section__head">
+          <p class="eyebrow marker" data-i18n="tuition.eyebrow"></p>
+          <h2 class="section__title" data-i18n="tuition.title" data-split></h2>
+          <p class="section__lede" data-i18n="tuition.lede"></p>
+        </header>
+        <ul class="fees" data-fees></ul>
+        <a class="link-arrow" href="https://ibsu.edu.ge/en/entrant/tuition-fees/" target="_blank" rel="noopener"><span data-i18n="tuition.cta"></span> →</a>
+      </div>
+    </section>
+
+    <section class="section section--blue dates" id="dates">
+      <div class="wrap">
+        <header class="section__head">
+          <p class="eyebrow marker" data-i18n="dates.eyebrow"></p>
+          <h2 class="section__title" data-i18n="dates.title" data-split></h2>
+        </header>
+        <ol class="timeline" data-dates></ol>
+      </div>
+    </section>
+
+    <section class="section section--paper faq" id="faq">
+      <div class="wrap faq__grid">
+        <header class="section__head">
+          <p class="eyebrow marker" data-i18n="faq.eyebrow"></p>
+          <h2 class="section__title" data-i18n="faq.title" data-split></h2>
+        </header>
+        <div class="faq__list" data-faq></div>
+      </div>
+    </section>
+
+    <section class="section finale" id="apply">
+      <div class="finale__bg" aria-hidden="true"><img src="/media/campus.webp" alt="" data-parallax="10" /></div>
+      <div class="wrap finale__inner">
+        <h2 class="finale__title" data-i18n="cta.title" data-split></h2>
+        <div class="hero__ctas">
+          <a class="btn btn--yellow btn--xl" href="https://ibsu.edu.ge/en/entrant/" target="_blank" rel="noopener" data-i18n="cta.apply"></a>
+          <a class="btn btn--ghost" href="https://ibsu.edu.ge/en/contact/" target="_blank" rel="noopener" data-i18n="cta.contact"></a>
+        </div>
+        <p class="finale__addr eyebrow" data-i18n="cta.address"></p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer__inner">
+      <span>© <span data-year></span> <span data-i18n="footer.rights"></span></span>
+      <a href="#top" data-i18n="footer.back">Back to top</a>
+    </div>
+  </footer>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

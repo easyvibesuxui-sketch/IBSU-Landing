@@ -1,0 +1,138 @@
+{
+  "meta": {
+    "title": "IBSU — Applicants",
+    "description": "Everything a future IBSU student needs: programmes, admission steps, tuition, scholarships and key dates at International Black Sea University, Tbilisi."
+  },
+  "nav": {
+    "skip": "Skip the story",
+    "programs": "Programmes",
+    "admission": "Admission",
+    "tuition": "Tuition",
+    "dates": "Dates",
+    "faq": "FAQ",
+    "apply": "Apply",
+    "lang": "GE",
+    "langLabel": "Switch to Georgian"
+  },
+  "story": {
+    "scroll": "Scroll to begin",
+    "age": "Age",
+    "chapters": [
+      { "n": "№ 01", "kicker": "The first page", "line": "Every story starts with a question." },
+      { "n": "№ 02", "kicker": "Closing the book", "line": "Then, one day, you go looking for the answer." },
+      { "n": "№ 03", "kicker": "Growing up", "line": "Every step, a little taller. Every year, a little braver." },
+      { "n": "№ 04", "kicker": "The next chapter", "line": "Until you find the place where it all comes together." }
+    ],
+    "memories": [
+      { "k": "kindergarten", "label": "Kindergarten" },
+      { "k": "school", "label": "First day of school" },
+      { "k": "sport", "label": "The first match" },
+      { "k": "parents", "label": "Mum & Dad" },
+      { "k": "grandparents", "label": "Grandma & Grandpa" },
+      { "k": "friends", "label": "Friends for life" }
+    ]
+  },
+  "hero": {
+    "eyebrow": "International Black Sea University · Tbilisi",
+    "title": "Georgia’s first English-language university.",
+    "lede": "Five schools, one courtyard. IBSU brings world-class, practice-based education — and the partnership of MIT, the world’s leading university — to the heart of Tbilisi.",
+    "start": "Start",
+    "apply": "Apply to IBSU"
+  },
+  "why": {
+    "eyebrow": "Why IBSU",
+    "title": "Your chapter starts here.",
+    "stats": [
+      { "value": "1995", "label": "Founded in Tbilisi" },
+      { "value": "5", "label": "Schools, one courtyard" },
+      { "value": "EN", "label": "Taught in English" },
+      { "value": "MIT", "label": "Partnership with MIT" }
+    ]
+  },
+  "programs": {
+    "eyebrow": "Programmes",
+    "title": "Choose the story you want to write.",
+    "lede": "Bachelor’s programmes across IBSU’s schools. Filter by school to see what fits you.",
+    "all": "All",
+    "degree": "Bachelor’s",
+    "more": "See full catalogue",
+    "schools": [
+      { "id": "business", "name": "Business" },
+      { "id": "tech", "name": "Computer Science & Engineering" },
+      { "id": "social", "name": "Social Sciences & Humanities" },
+      { "id": "law", "name": "Law" },
+      { "id": "education", "name": "Education" }
+    ],
+    "items": [
+      { "school": "business", "name": "Management" },
+      { "school": "business", "name": "Marketing" },
+      { "school": "business", "name": "Finance" },
+      { "school": "business", "name": "Accounting & Audit" },
+      { "school": "business", "name": "Tourism" },
+      { "school": "tech", "name": "Computer Science" },
+      { "school": "tech", "name": "Industrial Management & Technologies" },
+      { "school": "social", "name": "International Relations" },
+      { "school": "social", "name": "English Philology" },
+      { "school": "social", "name": "American Studies" },
+      { "school": "social", "name": "Economics" },
+      { "school": "social", "name": "Public Administration" },
+      { "school": "law", "name": "Law" }
+    ]
+  },
+  "admission": {
+    "eyebrow": "Admission",
+    "title": "Four steps to your first day.",
+    "steps": [
+      { "title": "Sit the Unified National Exams", "body": "Georgian applicants enter IBSU through the Unified National Exams. Register with the National Assessment and Examinations Center (NAEC)." },
+      { "title": "Choose IBSU and your programme", "body": "List IBSU and your chosen programme among your priorities during NAEC registration." },
+      { "title": "Get your results", "body": "Enrolment is based on your exam scores. Results are published by NAEC." },
+      { "title": "Enrol and sign your contract", "body": "Bring your documents to IBSU, sign the study contract and join orientation week." }
+    ],
+    "intl": {
+      "title": "Applying from abroad?",
+      "body": "International applicants apply directly to IBSU with their school certificate and English-language proof. Our admissions team will guide you through recognition and visas.",
+      "cta": "International admission"
+    }
+  },
+  "tuition": {
+    "eyebrow": "Tuition & scholarships",
+    "title": "An investment in your next forty years.",
+    "lede": "Tuition depends on the programme. Strong exam results and achievements can unlock discounts and scholarships.",
+    "cards": [
+      { "title": "Annual tuition", "value": "TBC", "note": "Per programme — see the full fee table." },
+      { "title": "Exam-score discounts", "value": "TBC", "note": "Based on your Unified National Exam results." },
+      { "title": "Scholarships", "value": "TBC", "note": "Merit, social and sports scholarships." }
+    ],
+    "cta": "Full fee table"
+  },
+  "dates": {
+    "eyebrow": "Key dates",
+    "title": "Mark your calendar.",
+    "items": [
+      { "date": "TBC", "title": "National exam registration opens" },
+      { "date": "TBC", "title": "Unified National Exams" },
+      { "date": "TBC", "title": "Results & enrolment" },
+      { "date": "TBC", "title": "Orientation week & first lectures" }
+    ]
+  },
+  "faq": {
+    "eyebrow": "FAQ",
+    "title": "Questions applicants ask.",
+    "items": [
+      { "q": "Are all programmes taught in English?", "a": "IBSU is Georgia’s first English-language university. Language of instruction is listed for each programme in the catalogue." },
+      { "q": "Which exams do I need?", "a": "Georgian applicants take the Unified National Exams; the required subjects depend on the programme you choose." },
+      { "q": "Can I get a scholarship?", "a": "Yes — IBSU offers discounts and scholarships based on exam results and achievements. See Tuition & scholarships." },
+      { "q": "I studied abroad. Can I apply?", "a": "Yes. International applicants apply directly to IBSU; the admissions team will help with document recognition." }
+    ]
+  },
+  "cta": {
+    "title": "Ready to write your next chapter?",
+    "apply": "Apply to IBSU",
+    "contact": "Talk to admissions",
+    "address": "David Agmashenebeli Alley 13km, 2, Tbilisi, Georgia"
+  },
+  "footer": {
+    "rights": "International Black Sea University",
+    "back": "Back to top"
+  }
+}

@@ -1,0 +1,21 @@
+/* Reveal system: JS adds .is-in to a group once; children stagger by --i.
+   Only armed when JS runs with motion allowed, so content is never hidden otherwise. */
+.motion-ok [data-split] .w { overflow: hidden; padding-bottom: 0.08em; margin-bottom: -0.08em; vertical-align: top; }
+.motion-ok [data-split] .w > span {
+  transform: translateY(105%);
+  transition: transform 1s var(--ease-out) calc(var(--i, 0) * 45ms);
+}
+.motion-ok .is-in [data-split] .w > span,
+.motion-ok [data-split].is-in .w > span { transform: none; }
+
+.motion-ok .reveal,
+.motion-ok .section__head > :not([data-split]),
+.motion-ok .finale__inner > :not([data-split]) {
+  opacity: 0; transform: translateY(28px);
+  transition: opacity .9s var(--ease-out) calc(var(--i, 0) * 70ms + 120ms), transform .9s var(--ease-out) calc(var(--i, 0) * 70ms + 120ms);
+}
+.motion-ok .is-in > .reveal,
+.motion-ok .is-in.section__head > :not([data-split]),
+.motion-ok .is-in.finale__inner > :not([data-split]) { opacity: 1; transform: none; }
+
+.motion-ok .is-in > .program:hover { transform: translateY(-4px); transition-delay: 0s; }
