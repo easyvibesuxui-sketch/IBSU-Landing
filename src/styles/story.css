@@ -105,37 +105,27 @@
 }
 @keyframes wheel { 0% { transform: translateY(0); opacity: 1; } 70% { transform: translateY(8px); opacity: 0; } 100% { opacity: 0; } }
 
-/* ─── Laptop screen → live site ─── */
+/* ─── Laptop screen → IBSU site ─── */
+.story__backdrop { position: absolute; inset: 0; background: var(--ox-blue); opacity: 0; pointer-events: none; }
 .screen {
-  position: absolute; left: 0; top: 0; width: 100%; height: 100%; z-index: 5;
-  transform-origin: 0 0;
-  opacity: 0; visibility: hidden; overflow: hidden;
+  position: absolute; left: 0; top: 0; width: 100%; height: 100%;
+  transform-origin: 0 0; opacity: 0; visibility: hidden; pointer-events: none;
 }
 .screen.is-live { visibility: visible; }
-
-.hero { position: relative; height: 100%; color: #fff; background: var(--ox-blue); display: flex; align-items: flex-end; }
-.hero__bg { position: absolute; inset: 0; }
-.hero__bg img { position: absolute; right: 0; top: 0; width: 72%; height: 100%; object-fit: cover; object-position: left center; }
-.hero__bg::after {
-  content: ""; position: absolute; inset: 0;
-  background:
-    linear-gradient(90deg, var(--ox-blue) 26%, color-mix(in srgb, var(--ox-blue) 70%, transparent) 42%, transparent 70%),
-    linear-gradient(to top, color-mix(in srgb, var(--ox-blue) 60%, transparent), transparent 35%);
+.screen img { width: 100%; height: 100%; object-fit: fill; }
+.story__cta {
+  position: absolute; left: 50%; top: 70%; z-index: 6;
+  opacity: 0; transform: translate3d(-50%, 24px, 0);
 }
-.hero__inner { position: relative; padding: 0 var(--gutter) clamp(72px, 12svh, 120px); max-width: 860px; }
-.hero__title { margin-top: 22px; font-size: var(--step-4); font-weight: 600; letter-spacing: -0.025em; }
-.hero__lede { margin-top: 26px; max-width: 56ch; font-size: var(--step-0); color: color-mix(in srgb, #fff 88%, transparent); }
-.hero__ctas { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 40px; }
-.hero [data-start] { position: relative; }
-.hero [data-start]::before { /* breathing halo invites the click */
+.story__cta .btn { box-shadow: 0 18px 50px -12px rgba(0, 0, 0, .55), 0 10px 30px -10px color-mix(in srgb, var(--yellow) 70%, transparent); }
+.story__cta .btn::before {
   content: ""; position: absolute; inset: -6px; border-radius: inherit; border: 2px solid var(--yellow);
   opacity: 0; animation: halo 2.4s var(--ease-out) infinite;
 }
+.story__cta .btn { position: relative; }
 @keyframes halo { 0% { opacity: .8; transform: scale(.96); } 100% { opacity: 0; transform: scale(1.18); } }
 
 @media (max-width: 720px) {
-  .hero__bg img { width: 100%; opacity: .55; }
-  .hero__bg::after { background: linear-gradient(to top, var(--ox-blue) 30%, color-mix(in srgb, var(--ox-blue) 55%, transparent) 70%, color-mix(in srgb, var(--ox-blue) 30%, transparent)); }
   .orb { --size: clamp(76px, 22vw, 110px); }
   .orb figcaption { font-size: .6rem; }
   .story__hud { grid-template-columns: auto 1fr; }
@@ -146,5 +136,5 @@
 
 /* Reduced motion: story becomes a still sequence, no scrub */
 @media (prefers-reduced-motion: reduce) {
-  .story__grain, .story__hint i::after, .hero [data-start]::before { animation: none; }
+  .story__grain, .story__hint i::after, .story__cta .btn::before { animation: none; }
 }

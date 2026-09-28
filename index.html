@@ -48,31 +48,24 @@
         <img src="media/frames/k5.webp" alt="" data-frame="4" />
       </div>
       <video class="story__video" muted playsinline preload="auto" aria-hidden="true" tabindex="-1"></video>
-      <!-- The laptop screen becomes the live site -->
-      <div class="screen" data-screen>
-        <section class="hero" aria-labelledby="hero-title">
-          <div class="hero__bg" aria-hidden="true"><img src="media/campus.webp" alt="" /></div>
-          <div class="hero__inner">
-            <p class="eyebrow eyebrow--pop" data-i18n="hero.eyebrow">International Black Sea University · Tbilisi</p>
-            <h1 class="hero__title" id="hero-title" data-i18n="hero.title">Georgia’s first English-language university.</h1>
-            <p class="hero__lede" data-i18n="hero.lede"></p>
-            <div class="hero__ctas">
-              <a class="btn btn--yellow btn--xl" href="#why" data-start>
-                <span data-i18n="hero.start">Start</span>
-                <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 5.5 15.5 10 11 14.5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
-              </a>
-              <a class="btn btn--ghost" href="#apply" data-i18n="hero.apply">Apply to IBSU</a>
-            </div>
-          </div>
-        </section>
       </div>
-      </div>
+      <!-- Navy backdrop + the IBSU site screenshot, pinned to the laptop screen with a homography -->
+      <div class="story__backdrop" data-backdrop aria-hidden="true"></div>
+      <div class="screen" data-screen aria-hidden="true"><img src="media/hero-screenshot.webp" alt="" /></div>
       <div class="story__grain" aria-hidden="true"></div>
       <div class="story__vignette" aria-hidden="true"></div>
 
       <div class="story__memories" data-memories></div>
 
       <div class="story__captions" data-chapters></div>
+
+      <div class="story__cta" data-cta>
+        <h1 class="sr-only" data-i18n="hero.title">Georgia’s first English-language university.</h1>
+        <a class="btn btn--yellow btn--xl" href="https://ibsu.edu.ge/">
+          <span data-i18n="hero.apply">Apply to IBSU</span>
+          <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 5.5 15.5 10 11 14.5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
+        </a>
+      </div>
 
       <div class="story__hud" aria-hidden="true">
         <div class="story__age"><span data-i18n="story.age">Age</span> <b data-age>06</b></div>

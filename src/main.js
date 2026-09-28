@@ -61,11 +61,7 @@ document.querySelector('[data-skip-story]').addEventListener('click', (e) => {
   e.preventDefault();
   scrollTo('#hero-end', -innerHeight);
 });
-document.querySelector('[data-start]').addEventListener('click', (e) => {
-  e.preventDefault();
-  scrollTo('#why');
-});
-document.querySelectorAll('a[href^="#"]:not([data-start]):not([data-skip-story])').forEach((a) =>
+document.querySelectorAll('a[href^="#"]:not([data-skip-story])').forEach((a) =>
   a.addEventListener('click', (e) => {
     const id = a.getAttribute('href');
     if (id.length < 2 || !document.querySelector(id)) return;

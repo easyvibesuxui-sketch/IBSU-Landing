@@ -4,12 +4,13 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 // Story timeline, as fractions of the pinned scroll distance.
 const VIDEO_END = 0.78;           // video (or keyframe fallback) plays across 0 → VIDEO_END
 const SITE_ON = [0.77, 0.81];     // the IBSU site lights up on the laptop screen
-const SCREEN = [0.82, 0.95];      // camera pushes into the screen until the site fills the viewport
-// Laptop screen in the final frame, as fractions of the 16:9 source frame (measured on k5).
-const SCREEN_RECT = { x: 0.2821, y: 0.4125, w: 0.1682, h: 0.1838 };
-// The screen is seen at an angle: its corners inside that box (%), eased to a full rectangle as we push in.
-const SCREEN_QUAD = [[0, 3.5], [82.5, 0], [100, 78.7], [11.4, 100]];
-const FULL_QUAD = [[0, 0], [100, 0], [100, 100], [0, 100]];
+const SCREEN = [0.81, 0.95];      // camera pushes into the screen, the site settles full-view
+const CTA_ON = [0.92, 0.97];      // then the single Apply button arrives
+// Laptop screen corners (TL, TR, BR, BL) in the final video frame, as fractions of the 16:9 frame.
+// Measured on story-1080's last frame.
+const SCREEN_QUAD = [[0.2839, 0.4194], [0.4207, 0.413], [0.4447, 0.5565], [0.309, 0.5926]];
+const SHOT_ASPECT = 1902 / 840;   // hero-screenshot.webp (nav bar cropped, its buttons painted out)
+const SHOT_BUTTON = [75 / 1902, 700 / 840]; // where the screenshot's own CTA sat — ours takes its place
 const FRAME_ASPECT = 16 / 9;
 // Where the subject is (x as a fraction of the frame) over video time 0 → 1. On narrow screens
 // object-fit: cover crops most of the 16:9 frame, so the visible window follows him.
@@ -24,6 +25,32 @@ const MEMORIES = [0.22, 0.62];     // core-memory orbs drift past while he grows
 const AGE = [[0.2, 6], [0.6, 17]];
 
 const clamp01 = (v) => Math.min(1, Math.max(0, v));
+const lerp = (a, b, t) => a + (b - a) * t;
+
+// Projective transform taking the w×h box onto quad q (TL, TR, BR, BL), as a CSS matrix3d.
+function quadMatrix(w, h, q) {
+  const src = [[0, 0], [w, 0], [w, h], [0, h]];
+  const A = [], B = [];
+  src.forEach(([x, y], i) => {
+    const [u, v] = q[i];
+    A.push([x, y, 1, 0, 0, 0, -u * x, -u * y]); B.push(u);
+    A.push([0, 0, 0, x, y, 1, -v * x, -v * y]); B.push(v);
+  });
+  // Gaussian elimination, 8×8
+  for (let c = 0; c < 8; c++) {
+    let m = c;
+    for (let r = c + 1; r < 8; r++) if (Math.abs(A[r][c]) > Math.abs(A[m][c])) m = r;
+    [A[c], A[m]] = [A[m], A[c]]; [B[c], B[m]] = [B[m], B[c]];
+    for (let r = 0; r < 8; r++) {
+      if (r === c) continue;
+      const f = A[r][c] / A[c][c];
+      for (let k = c; k < 8; k++) A[r][k] -= f * A[c][k];
+      B[r] -= f * B[c];
+    }
+  }
+  const [a, b, c, d, e, f, g, hh] = B.map((v, i) => v / A[i][i]);
+  return `matrix3d(${a},${d},0,${g},${b},${e},0,${hh},0,0,1,0,${c},${f},0,1)`;
+}
 const range = (p, a, b) => clamp01((p - a) / (b - a));
 // 0 → 1 → 0 envelope with soft edges, for things that appear and leave
 const envelope = (p, a, b, edge = 0.25) => {
@@ -38,6 +65,8 @@ export function initStory({ reduced, onSiteState }) {
   const chapters = [...story.querySelectorAll('.chapter')];
   const orbs = [...story.querySelectorAll('.orb')];
   const screen = story.querySelector('[data-screen]');
+  const backdrop = story.querySelector('[data-backdrop]');
+  const cta = story.querySelector('[data-cta]');
   const zoom = story.querySelector('[data-zoom]');
   const overlays = [...story.querySelectorAll('.story__grain, .story__vignette')];
   const stage = story.querySelector('.story__stage');
@@ -133,21 +162,39 @@ export function initStory({ reduced, onSiteState }) {
     hint.style.opacity = 1 - range(p, 0, 0.03);
     hud.style.opacity = 1 - range(p, SCREEN[0] - 0.04, SCREEN[0]);
 
-    // laptop screen → live hero: map the screen rect through object-fit: cover
-    const rx = -overflow * left + SCREEN_RECT.x * fw, ry = (H - fh) / 2 + SCREEN_RECT.y * fh;
-    const rw = SCREEN_RECT.w * fw, rh = SCREEN_RECT.h * fh;
-    const on = range(p, SITE_ON[0], SITE_ON[1]);
+    // laptop screen → IBSU site. Frame→viewport mapping follows object-fit: cover + the pan above.
+    const ox = -overflow * left, oy = (H - fh) / 2;
+    const quad = SCREEN_QUAD.map(([x, y]) => [ox + x * fw, oy + y * fh]);
+    // Push in uniformly until the rectangle inscribed in the screen covers the viewport
+    const ix0 = Math.max(quad[0][0], quad[3][0]), ix1 = Math.min(quad[1][0], quad[2][0]);
+    const iy0 = Math.max(quad[0][1], quad[1][1]), iy1 = Math.min(quad[2][1], quad[3][1]);
     const s = range(p, SCREEN[0], SCREEN[1]);
     const e = gsap.parseEase('power3.inOut')(s);
-    const zx = 1 + (W / rw - 1) * e, zy = 1 + (H / rh - 1) * e;
-    zoom.style.transform = s > 0 ? `translate(${(1 - e) * rx - zx * rx}px, ${(1 - e) * ry - zy * ry}px) scale(${zx}, ${zy})` : '';
+    const Z = lerp(1, Math.max(W / (ix1 - ix0), H / (iy1 - iy0)), e);
+    const cx = (ix0 + ix1) / 2, cy = (iy0 + iy1) / 2;
+    const tx = lerp(0, W / 2 - cx * Z, e) + (1 - e) * cx * (1 - Z), ty = lerp(0, H / 2 - cy * Z, e) + (1 - e) * cy * (1 - Z);
+    zoom.style.transform = s > 0 ? `translate(${tx}px, ${ty}px) scale(${Z})` : '';
+    // Screenshot rides the zoomed screen, then relaxes into an undistorted, fully visible frame
+    const onScreen = quad.map(([x, y]) => [tx + x * Z, ty + y * Z]);
+    // Anchored left where the headline lives: cover on landscape; on portrait, scale so the
+    // headline column (first ~480px of the shot) spans the viewport width.
+    const fitW = Math.max(W, Math.min(H * SHOT_ASPECT, W * 1902 / 480)), fitH = fitW / SHOT_ASPECT;
+    const fx = 0, fy = (H - fitH) / 2;
+    const target = [[fx, fy], [fx + fitW, fy], [fx + fitW, fy + fitH], [fx, fy + fitH]];
+    const settle = gsap.parseEase('power2.inOut')(range(s, 0.45, 1));
+    const shown = onScreen.map(([x, y], i) => [lerp(x, target[i][0], settle), lerp(y, target[i][1], settle)]);
+    const on = range(p, SITE_ON[0], SITE_ON[1]);
     screen.classList.toggle('is-live', on > 0);
     screen.style.opacity = on;
-    screen.style.transform = `translate(${rx}px, ${ry}px) scale(${rw / W}, ${rh / H})`;
+    if (on > 0) screen.style.transform = quadMatrix(W, H, shown);
+    backdrop.style.opacity = clamp01(settle * 2.5);
     overlays.forEach((o) => { o.style.opacity = (o.classList.contains('story__grain') ? 0.07 : 1) * (1 - e); });
-    const quad = SCREEN_QUAD.map(([x, y], i) => `${x + (FULL_QUAD[i][0] - x) * e}% ${y + (FULL_QUAD[i][1] - y) * e}%`);
-    screen.style.clipPath = `polygon(${quad.join(',')})`;
-    screen.inert = s < 0.98;
+    const c = range(p, CTA_ON[0], CTA_ON[1]);
+    cta.style.opacity = c;
+    cta.style.left = `${fx + SHOT_BUTTON[0] * fitW}px`;
+    cta.style.top = `${fy + SHOT_BUTTON[1] * fitH}px`;
+    cta.style.transform = `translate3d(0, ${(1 - c) * 24}px, 0)`;
+    cta.inert = c < 0.5;
 
     const next = s >= 0.98 ? 'site' : 'story';
     if (next !== siteState) { siteState = next; onSiteState(next); }

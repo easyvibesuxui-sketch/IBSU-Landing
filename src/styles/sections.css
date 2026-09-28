@@ -194,6 +194,7 @@
 .finale__bg::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, var(--ox-blue), color-mix(in srgb, var(--ox-blue) 40%, transparent) 50%, var(--void)); }
 .finale__inner { position: relative; text-align: center; display: grid; justify-items: center; }
 .finale__title { font-size: var(--step-4); max-width: 16ch; }
+.hero__ctas { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 40px; }
 .finale .hero__ctas { justify-content: center; }
 .finale__addr { margin-top: 48px; color: color-mix(in srgb, #fff 60%, transparent); }
 
