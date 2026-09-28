@@ -2,8 +2,15 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 // Story timeline, as fractions of the pinned scroll distance.
-const VIDEO_END = 0.86;           // video (or keyframe fallback) plays across 0 → VIDEO_END
-const SCREEN = [0.8, 0.93];       // laptop screen grows into the live hero
+const VIDEO_END = 0.78;           // video (or keyframe fallback) plays across 0 → VIDEO_END
+const SITE_ON = [0.77, 0.81];     // the IBSU site lights up on the laptop screen
+const SCREEN = [0.82, 0.95];      // camera pushes into the screen until the site fills the viewport
+// Laptop screen in the final frame, as fractions of the 16:9 source frame (measured on k5).
+const SCREEN_RECT = { x: 0.2821, y: 0.4125, w: 0.1682, h: 0.1838 };
+// The screen is seen at an angle: its corners inside that box (%), eased to a full rectangle as we push in.
+const SCREEN_QUAD = [[0, 3.5], [82.5, 0], [100, 78.7], [11.4, 100]];
+const FULL_QUAD = [[0, 0], [100, 0], [100, 100], [0, 100]];
+const FRAME_ASPECT = 16 / 9;
 const CHAPTERS = [[0.015, 0.15], [0.18, 0.31], [0.36, 0.56], [0.6, 0.76]];
 const MEMORIES = [0.3, 0.68];     // core-memory orbs drift past while he grows up
 const AGE = [[0.2, 6], [0.64, 17]];
@@ -23,6 +30,9 @@ export function initStory({ reduced, onSiteState }) {
   const chapters = [...story.querySelectorAll('.chapter')];
   const orbs = [...story.querySelectorAll('.orb')];
   const screen = story.querySelector('[data-screen]');
+  const zoom = story.querySelector('[data-zoom]');
+  const overlays = [...story.querySelectorAll('.story__grain, .story__vignette')];
+  const stage = story.querySelector('.story__stage');
   const age = story.querySelector('[data-age]');
   const bar = story.querySelector('[data-progress]');
   const hint = story.querySelector('[data-hint]');
@@ -106,13 +116,22 @@ export function initStory({ reduced, onSiteState }) {
     hint.style.opacity = 1 - range(p, 0, 0.03);
     hud.style.opacity = 1 - range(p, SCREEN[0] - 0.04, SCREEN[0]);
 
-    // laptop screen → live hero
+    // laptop screen → live hero: map the screen rect through object-fit: cover
+    const W = stage.clientWidth, H = stage.clientHeight;
+    const fw = Math.max(W, H * FRAME_ASPECT), fh = fw / FRAME_ASPECT;
+    const rx = (W - fw) / 2 + SCREEN_RECT.x * fw, ry = (H - fh) / 2 + SCREEN_RECT.y * fh;
+    const rw = SCREEN_RECT.w * fw, rh = SCREEN_RECT.h * fh;
+    const on = range(p, SITE_ON[0], SITE_ON[1]);
     const s = range(p, SCREEN[0], SCREEN[1]);
-    const eased = gsap.parseEase('power2.inOut')(s);
-    screen.classList.toggle('is-live', s > 0);
-    screen.style.opacity = clamp01(s / 0.35);
-    screen.style.transform = `scale(${0.36 + 0.64 * eased})`;
-    screen.style.borderRadius = `${18 * (1 - eased)}px`;
+    const e = gsap.parseEase('power3.inOut')(s);
+    const zx = 1 + (W / rw - 1) * e, zy = 1 + (H / rh - 1) * e;
+    zoom.style.transform = s > 0 ? `translate(${(1 - e) * rx - zx * rx}px, ${(1 - e) * ry - zy * ry}px) scale(${zx}, ${zy})` : '';
+    screen.classList.toggle('is-live', on > 0);
+    screen.style.opacity = on;
+    screen.style.transform = `translate(${rx}px, ${ry}px) scale(${rw / W}, ${rh / H})`;
+    overlays.forEach((o) => { o.style.opacity = (o.classList.contains('story__grain') ? 0.07 : 1) * (1 - e); });
+    const quad = SCREEN_QUAD.map(([x, y], i) => `${x + (FULL_QUAD[i][0] - x) * e}% ${y + (FULL_QUAD[i][1] - y) * e}%`);
+    screen.style.clipPath = `polygon(${quad.join(',')})`;
     screen.inert = s < 0.98;
 
     const next = s >= 0.98 ? 'site' : 'story';

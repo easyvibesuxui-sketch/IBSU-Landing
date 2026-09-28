@@ -5,6 +5,7 @@
   background: radial-gradient(120% 90% at 30% 70%, #0a1a3d 0%, var(--void) 60%);
   isolation: isolate;
 }
+.story__zoom { position: absolute; inset: 0; transform-origin: 0 0; }
 .story__frames, .story__video { position: absolute; inset: 0; width: 100%; height: 100%; }
 .story__frames img {
   position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
@@ -106,10 +107,9 @@
 
 /* ─── Laptop screen → live site ─── */
 .screen {
-  position: absolute; inset: 0; z-index: 5;
-  transform-origin: var(--screen-ox, 50%) var(--screen-oy, 46%);
-  opacity: 0; visibility: hidden;
-  border-radius: 18px; overflow: hidden;
+  position: absolute; left: 0; top: 0; width: 100%; height: 100%; z-index: 5;
+  transform-origin: 0 0;
+  opacity: 0; visibility: hidden; overflow: hidden;
 }
 .screen.is-live { visibility: visible; }
 

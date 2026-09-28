@@ -39,28 +39,15 @@
   <!-- ─────────── Story (pinned, scroll-scrubbed) ─────────── -->
   <section class="story" id="top" aria-label="IBSU story">
     <div class="story__stage">
+      <div class="story__zoom" data-zoom>
       <div class="story__frames" aria-hidden="true">
         <img src="/media/frames/k1.webp" alt="" data-frame="0" />
         <img src="/media/frames/k2.webp" alt="" data-frame="1" />
         <img src="/media/frames/k3.webp" alt="" data-frame="2" />
         <img src="/media/frames/k4.webp" alt="" data-frame="3" />
         <img src="/media/frames/k5.webp" alt="" data-frame="4" />
-        <img src="/media/frames/k6.webp" alt="" data-frame="5" />
       </div>
       <video class="story__video" muted playsinline preload="auto" aria-hidden="true" tabindex="-1"></video>
-      <div class="story__grain" aria-hidden="true"></div>
-      <div class="story__vignette" aria-hidden="true"></div>
-
-      <div class="story__memories" data-memories></div>
-
-      <div class="story__captions" data-chapters></div>
-
-      <div class="story__hud" aria-hidden="true">
-        <div class="story__age"><span data-i18n="story.age">Age</span> <b data-age>06</b></div>
-        <div class="story__progress"><i data-progress></i></div>
-        <div class="story__hint" data-hint><span data-i18n="story.scroll">Scroll to begin</span><i></i></div>
-      </div>
-
       <!-- The laptop screen becomes the live site -->
       <div class="screen" data-screen>
         <section class="hero" aria-labelledby="hero-title">
@@ -79,6 +66,20 @@
           </div>
         </section>
       </div>
+      </div>
+      <div class="story__grain" aria-hidden="true"></div>
+      <div class="story__vignette" aria-hidden="true"></div>
+
+      <div class="story__memories" data-memories></div>
+
+      <div class="story__captions" data-chapters></div>
+
+      <div class="story__hud" aria-hidden="true">
+        <div class="story__age"><span data-i18n="story.age">Age</span> <b data-age>06</b></div>
+        <div class="story__progress"><i data-progress></i></div>
+        <div class="story__hint" data-hint><span data-i18n="story.scroll">Scroll to begin</span><i></i></div>
+      </div>
+
     </div>
   </section>
   <div id="hero-end" aria-hidden="true"></div>
