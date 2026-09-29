@@ -8,13 +8,13 @@ const SCREEN = [0.81, 0.95];      // camera pushes into the screen, the site set
 const CTA_ON = [0.92, 0.97];      // then the single Apply button arrives
 // Laptop screen corners (TL, TR, BR, BL) in the final video frame, as fractions of the 16:9 frame.
 // Measured on story-1080's last frame.
-const SCREEN_QUAD = [[0.2839, 0.4194], [0.4207, 0.413], [0.4447, 0.5565], [0.309, 0.5926]];
+const SCREEN_QUAD = [[0.3674, 0.4546], [0.5258, 0.4611], [0.535, 0.6551], [0.3797, 0.656]];
 const SHOT_ASPECT = 1902 / 840;   // hero-screenshot.webp (nav bar cropped, its buttons painted out)
 const SHOT_BUTTON = [75 / 1902, 700 / 840]; // where the screenshot's own CTA sat — ours takes its place
 const FRAME_ASPECT = 16 / 9;
 // Where the subject is (x as a fraction of the frame) over video time 0 → 1. On narrow screens
 // object-fit: cover crops most of the 16:9 frame, so the visible window follows him.
-const FOCUS = [[0, 0.13], [0.2, 0.2], [0.25, 0.28], [0.5, 0.46], [0.75, 0.54], [0.8, 0.68], [0.86, 0.64], [0.92, 0.45], [1, 0.4]];
+const FOCUS = [[0, 0.27], [0.2, 0.36], [0.25, 0.38], [0.5, 0.47], [0.75, 0.5], [0.8, 0.55], [0.86, 0.62], [0.93, 0.58], [1, 0.45]];
 const focusAt = (t) => {
   const i = Math.max(1, FOCUS.findIndex(([k]) => k >= t));
   const [t0, x0] = FOCUS[i - 1], [t1, x1] = FOCUS[i];
