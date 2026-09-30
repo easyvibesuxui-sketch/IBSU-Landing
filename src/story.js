@@ -10,7 +10,7 @@ const CTA_ON = [0.92, 0.97];      // then the single Apply button arrives
 // Measured on story-1080's last frame; the left edge starts right of the hair that overlaps the screen.
 const SCREEN_QUAD = [[0.4358, 0.278], [0.6441, 0.2861], [0.643, 0.5787], [0.4358, 0.559]];
 // Phone screen corners in the mobile video's final frame (story-m).
-const PHONE_QUAD = [[0.4405, 0.3926], [0.5538, 0.3926], [0.5538, 0.8426], [0.4405, 0.8426]];
+const PHONE_QUAD = [[0.4598, 0.137], [0.6602, 0.1463], [0.6106, 0.8991], [0.4139, 0.8426]];
 // Narrow viewports get the phone ending (story-m) instead of the laptop one.
 const PHONE = matchMedia('(max-width: 760px)').matches;
 const SHOT_ASPECT = 1902 / 840;   // hero-screenshot.webp (nav bar cropped, its buttons painted out)
@@ -18,7 +18,7 @@ const SHOT_BUTTON = [75 / 1902, 700 / 840]; // where the screenshot's own CTA sa
 const FRAME_ASPECT = 16 / 9;
 // Where the subject is (x as a fraction of the frame) over video time 0 → 1. On narrow screens
 // object-fit: cover crops most of the 16:9 frame, so the visible window follows them.
-const FOCUS = [[0, 0.6], [0.2, 0.6], [0.3, 0.55], [0.4, 0.49], [0.8, 0.5], [0.9, 0.52], [1, PHONE ? 0.5 : 0.54]];
+const FOCUS = [[0, 0.6], [0.2, 0.6], [0.3, 0.55], [0.4, 0.49], [0.8, 0.5], [0.9, 0.52], [1, PHONE ? 0.535 : 0.54]];
 const focusAt = (t) => {
   const i = Math.max(1, FOCUS.findIndex(([k]) => k >= t));
   const [t0, x0] = FOCUS[i - 1], [t1, x1] = FOCUS[i];
