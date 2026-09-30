@@ -75,7 +75,7 @@ export function initStory({ reduced, onSiteState }) {
   screen.classList.toggle('screen--phone', PHONE);
   const cta = story.querySelector('[data-cta]');
   const zoom = story.querySelector('[data-zoom]');
-  const overlays = [...story.querySelectorAll('.story__grain, .story__vignette')];
+  const overlays = [...story.querySelectorAll('.story__holo, .story__grain, .story__vignette')];
   const stage = story.querySelector('.story__stage');
   const age = story.querySelector('[data-age]');
   const bar = story.querySelector('[data-progress]');

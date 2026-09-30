@@ -93,3 +93,18 @@ body { background: var(--void); color: var(--ink); }
 .orb { --glow: #9fdcff !important; }
 .orb__ball img { mix-blend-mode: screen; filter: grayscale(1) contrast(1.15) brightness(1.1); }
 .orb__ball { background: radial-gradient(circle at 35% 30%, #d9f3ff, #3a7fb8 55%, #071a33); }
+
+/* Hologram pass over the story: cool tint, scanlines, a slow sweep and a faint flicker.
+   Fades out with the other overlays as the camera enters the screen. */
+.story__video, .story__frames img { filter: saturate(.8) hue-rotate(-8deg) contrast(1.08) brightness(1.05); }
+.story__holo {
+  position: absolute; inset: 0; pointer-events: none; mix-blend-mode: screen;
+  background:
+    linear-gradient(180deg, transparent 0%, color-mix(in srgb, var(--glow) 10%, transparent) 50%, transparent 100%) 0 0 / 100% 38% no-repeat,
+    repeating-linear-gradient(0deg, color-mix(in srgb, var(--glow) 9%, transparent) 0 1px, transparent 1px 3px),
+    radial-gradient(90% 70% at 50% 45%, color-mix(in srgb, #3fb8ff 10%, transparent), transparent 70%);
+  animation: holo-sweep 6s linear infinite, holo-flicker 4.2s steps(1) infinite;
+}
+@keyframes holo-sweep { from { background-position: 0 -40%, 0 0, 0 0; } to { background-position: 0 140%, 0 0, 0 0; } }
+@keyframes holo-flicker { 0%, 100% { filter: none; } 46% { filter: brightness(1.25); } 47% { filter: none; } 82% { filter: brightness(.85); } 83% { filter: none; } }
+@media (prefers-reduced-motion: reduce) { .story__holo { animation: none; } }
