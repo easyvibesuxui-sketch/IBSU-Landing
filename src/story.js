@@ -18,17 +18,17 @@ const SHOT_BUTTON = [75 / 1902, 700 / 840]; // where the screenshot's own CTA sa
 const FRAME_ASPECT = 16 / 9;
 // Where the subject is (x as a fraction of the frame) over video time 0 → 1. On narrow screens
 // object-fit: cover crops most of the 16:9 frame, so the visible window follows them.
-const FOCUS = [[0, 0.6], [0.2, 0.6], [0.3, 0.55], [0.4, 0.49], [0.8, 0.5], [0.9, 0.52], [1, PHONE ? 0.535 : 0.54]];
+const FOCUS = [[0, 0.27], [0.2, 0.36], [0.25, 0.38], [0.5, 0.47], [0.75, 0.5], [0.8, 0.55], [0.86, 0.62], [0.93, 0.58], [1, PHONE ? 0.5 : 0.45]];
 const focusAt = (t) => {
   const i = Math.max(1, FOCUS.findIndex(([k]) => k >= t));
   const [t0, x0] = FOCUS[i - 1], [t1, x1] = FOCUS[i];
   return x0 + (x1 - x0) * clamp01((t - t0) / (t1 - t0 || 1));
 };
-const CHAPTERS = [[0.01, 0.12], [0.14, 0.3], [0.31, 0.46], [0.54, 0.66], [0.67, 0.77]];
+const CHAPTERS = [[0.01, 0.12], [0.13, 0.25], [0.28, 0.52], [0.56, 0.74]];
 // Resting points for the "sticky" scroll: top, each chapter at full strength, the lit screen, the CTA
-export const SNAP_POINTS = [0, 0.065, 0.22, 0.385, 0.605, 0.72, 0.8, 1];
-const MEMORIES = [0.18, 0.46];     // core-memory orbs drift past on the way down
-const AGE = [[0.16, 6], [0.46, 17]];
+export const SNAP_POINTS = [0, 0.065, 0.19, 0.4, 0.65, 0.8, 1];
+const MEMORIES = [0.22, 0.62];     // core-memory orbs drift past while they grow up
+const AGE = [[0.2, 6], [0.6, 17]];
 
 const clamp01 = (v) => Math.min(1, Math.max(0, v));
 const lerp = (a, b, t) => a + (b - a) * t;

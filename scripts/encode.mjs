@@ -1,5 +1,5 @@
 // Builds web media from the Kling sources in assets-src/.
-//   assets-src/clips/c1…c4 + c5d / c5m  → public/media/story-1080.*, story-m.* (short GOP, scrub-friendly)
+//   assets-src/clips/c1…c3 + c4d / c4m  → public/media/story-1080.*, story-m.* (short GOP, scrub-friendly)
 //   assets-src/keyframes/k1.png … k6.png → public/media/frames/k*.webp (poster + no-video fallback)
 //   assets-src/memories/*.png           → public/media/memories/*.webp
 import { execFileSync } from 'node:child_process';
@@ -22,11 +22,11 @@ for (const f of list(join(src, 'memories'), '.png')) {
   run(['-i', join(src, 'memories', f), '-vf', 'scale=480:480:force_original_aspect_ratio=increase,crop=480:480', '-quality', '80', join(out, 'memories', f.replace('.png', '.webp'))]);
 }
 
-// Shared story c1…c4, then one ending per device: c5d (laptop) → story-1080, c5m (phone) → story-m.
-const shared = list(join(src, 'clips'), '.mp4').filter((c) => /^c[1-4]\.mp4$/.test(c));
+// Shared story c1…c3, then one ending per device: c4d (laptop) → story-1080, c4m (phone) → story-m.
+const shared = list(join(src, 'clips'), '.mp4').filter((c) => /^c[1-3]\.mp4$/.test(c));
 const variants = [
-  ['story-1080', 'c5d.mp4', 1080, 23, 36],
-  ['story-m', 'c5m.mp4', 720, 26, 38],
+  ['story-1080', 'c4d.mp4', 1080, 23, 36],
+  ['story-m', 'c4m.mp4', 720, 26, 38],
 ].filter(([, end]) => existsSync(join(src, 'clips', end)));
 for (const [name, end, h, crf264, crfvp9] of variants) {
   // Kling clips come in slightly different sizes (1916×1080, 1928×1072…), so normalise each before joining
