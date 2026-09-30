@@ -19,7 +19,7 @@ import './styles/motion.css';
 
 import { initI18n, onLangChange } from './i18n.js';
 import { renderContent } from './render.js';
-import { initStory } from './story.js';
+import { initStory, SNAP_POINTS } from './story.js';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -37,8 +37,12 @@ if (!reduced) {
   gsap.ticker.add((time) => lenis.raf(time * 1000));
   gsap.ticker.lagSmoothing(0);
 }
-const scrollTo = (target, offset = 0) =>
-  lenis ? lenis.scrollTo(target, { offset, duration: 1.6 }) : document.querySelector(target)?.scrollIntoView({ behavior: 'auto' });
+let autoScrolling = false; // true while a programmatic scroll runs, so snapping doesn't fight it
+const scrollTo = (target, offset = 0) => {
+  if (!lenis) return document.querySelector(target)?.scrollIntoView({ behavior: 'auto' });
+  autoScrolling = true;
+  lenis.scrollTo(target, { offset, duration: 1.6, onComplete: () => { autoScrolling = false; } });
+};
 
 // ── Nav state follows the story, then the background under it
 const nav = document.querySelector('.nav');
@@ -55,6 +59,39 @@ document.querySelectorAll('.section--paper, .section--gray').forEach((sec) =>
     },
   }),
 );
+
+// ── Sticky story: when scrolling rests inside the story, ease to the nearest key moment.
+// Only nearby points pull (within SNAP_REACH of the viewport), so long passages stay free. ?snap=0 turns it off.
+const SNAP_REACH = 0.3;
+if (lenis && new URLSearchParams(location.search).get('snap') !== '0') {
+  const story = document.querySelector('.story');
+  let idle = 0;
+  let touching = false;
+  // Any user input takes over from an in-flight snap (Lenis cancels it without calling onComplete)
+  const userInput = () => { autoScrolling = false; };
+  addEventListener('wheel', userInput, { passive: true });
+  addEventListener('keydown', userInput);
+  addEventListener('touchstart', () => { touching = true; userInput(); }, { passive: true });
+  addEventListener('touchend', () => { touching = false; clearTimeout(idle); idle = setTimeout(trySnap, 160); }, { passive: true });
+  const trySnap = () => {
+    if (autoScrolling || touching) return;
+    const top = story.offsetTop;
+    const span = story.offsetHeight - innerHeight;
+    const y = lenis.scroll;
+    if (y <= top || y >= top + span) return;
+    const target = SNAP_POINTS.map((p) => top + p * span)
+      .reduce((best, t) => (Math.abs(t - y) < Math.abs(best - y) ? t : best));
+    const dist = Math.abs(target - y);
+    if (dist < 2 || dist > innerHeight * SNAP_REACH) return;
+    autoScrolling = true;
+    lenis.scrollTo(target, {
+      duration: Math.min(1.1, 0.45 + dist / innerHeight),
+      easing: (t) => 1 - (1 - t) ** 3,
+      onComplete: () => { autoScrolling = false; },
+    });
+  };
+  lenis.on('scroll', () => { clearTimeout(idle); idle = setTimeout(trySnap, 160); });
+}
 
 // ── Story shortcuts
 document.querySelector('[data-skip-story]').addEventListener('click', (e) => {
