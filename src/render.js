@@ -18,8 +18,8 @@ const fill = (sel, nodes) => document.querySelector(sel)?.replaceChildren(...nod
 
 // Memory orb placement (% of stage). Kept clear of the walking figure's lane.
 const ORB_POS = [
-  ['74%', '10%'], ['6%', '14%'], ['84%', '36%'],
-  ['14%', '40%'], ['64%', '28%'], ['26%', '6%'],
+  ['76%', '8%'], ['6%', '12%'], ['84%', '36%'],
+  ['12%', '40%'], ['72%', '20%'], ['22%', '24%'],
 ];
 
 export function renderContent() {

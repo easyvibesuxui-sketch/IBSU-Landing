@@ -1,5 +1,5 @@
 /* ─── Story stage ─── */
-.story { position: relative; height: var(--story-length, 820svh); background: var(--void); }
+.story { position: relative; height: var(--story-length, 1000svh); background: var(--void); }
 .story__stage {
   position: sticky; top: 0; height: 100svh; overflow: hidden;
   background: radial-gradient(120% 90% at 30% 70%, #0a1a3d 0%, var(--void) 60%);
