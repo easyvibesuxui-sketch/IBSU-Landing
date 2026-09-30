@@ -1,0 +1,95 @@
+/* ─── Version B: dark digital theme ───
+   Deep navy-black surfaces, cool white/cyan light, hairline grids and particles.
+   The IBSU yellow stays the single action colour. Loaded after sections.css. */
+:root {
+  --void: #03050c;
+  --paper: #060a15;          /* was white */
+  --gray: #0a1020;           /* was light gray */
+  --ink: #e6edff;            /* body text on dark */
+  --mute: #8f9bb8;
+  --glow: #9fdcff;           /* digital light */
+  --glow-soft: color-mix(in srgb, var(--glow) 16%, transparent);
+  --line: color-mix(in srgb, #9fb6ff 14%, transparent);
+  --line-inv: color-mix(in srgb, #9fb6ff 18%, transparent);
+  --pop: #7fd4ff;            /* wayfinding becomes cyan light */
+  --amber: #ff8a5c;
+}
+
+body { background: var(--void); color: var(--ink); }
+
+/* Every section is dark; a faint perspective grid gives the digital floor */
+.section--paper, .section--gray, .section--ink, .section--blue, .finale { background: var(--paper); color: var(--ink); }
+.section--gray, .section--blue { background: var(--gray); }
+.section::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .5;
+  background-image:
+    linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(120% 70% at 50% 0%, #000 0%, transparent 70%);
+}
+.section > .wrap { position: relative; }
+#main > .section:first-child { border-radius: 0; margin-top: 0; }
+
+.section__title, .section--ink .section__title, .section--blue .section__title { color: #fff; text-shadow: 0 0 40px var(--glow-soft); }
+.section__lede { color: var(--mute); }
+.eyebrow, .section--ink .eyebrow, .section--blue .eyebrow { color: color-mix(in srgb, var(--glow) 70%, #fff); }
+.marker::before { background: var(--glow); box-shadow: 0 0 12px var(--glow); }
+.link-arrow { color: #fff; text-decoration-color: var(--glow); }
+
+/* stats */
+.stats, .stats li { border-color: var(--line); }
+.stats b { color: #fff; text-shadow: 0 0 30px var(--glow-soft); }
+.why__photo img { filter: saturate(.35) brightness(.55) contrast(1.1); }
+.why__photo { position: relative; }
+.why__photo::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, var(--paper), transparent 30%, transparent 70%, var(--paper)); }
+
+/* programmes */
+.filters button { background: transparent; color: var(--ink); border-color: var(--line); }
+.filters button:hover { border-color: var(--glow); }
+.filters button[aria-pressed="true"] { background: var(--glow); border-color: var(--glow); color: #041020; }
+.program { background: color-mix(in srgb, #fff 3%, transparent); border-color: var(--line); backdrop-filter: blur(4px); }
+.program:hover { border-color: color-mix(in srgb, var(--glow) 50%, transparent); box-shadow: 0 0 0 1px color-mix(in srgb, var(--glow) 30%, transparent), 0 20px 60px -30px var(--glow); }
+.program h3, .program__fee b { color: #fff; }
+.program__meta { border-color: var(--line); }
+.tag--en { background: color-mix(in srgb, var(--glow) 14%, transparent); color: var(--glow); }
+.tag--ka { background: color-mix(in srgb, #c7a6ff 14%, transparent); color: #d4bcff; }
+.chip-link { background: transparent; color: var(--ink); border-color: var(--line); }
+.chip-link:hover { border-color: var(--glow); color: var(--glow); }
+
+/* admission */
+.intl { background: color-mix(in srgb, #fff 3%, transparent); }
+.steps li::before { color: var(--yellow); text-shadow: 0 0 24px color-mix(in srgb, var(--yellow) 40%, transparent); }
+.steps__fill { background: var(--glow); box-shadow: 0 0 10px var(--glow); }
+
+/* calculator */
+.calc__inputs { background: color-mix(in srgb, #fff 3%, transparent); border: 1px solid var(--line); }
+.select select, .grant { background: #0b1326; color: var(--ink); border-color: var(--line); }
+.select::after { border-color: var(--glow); }
+.grant__pct { color: var(--glow); }
+.grant:has(input:checked) { border-color: var(--glow); }
+.grant input { accent-color: var(--glow); }
+.calc__result { background: linear-gradient(160deg, #0d1a3a, #060a15); border: 1px solid color-mix(in srgb, var(--glow) 30%, transparent); box-shadow: 0 30px 80px -40px var(--glow); }
+
+/* explore */
+.explore__card { background: color-mix(in srgb, #fff 3%, transparent); }
+.pill { border-color: var(--line); }
+
+/* faq */
+.faq__list summary { color: #fff; }
+.faq__list details, .faq__list summary i { border-color: var(--line); }
+.faq__list summary i::before, .faq__list summary i::after { background: var(--glow); }
+.faq__list details[open] summary i::before, .faq__list details[open] summary i::after { background: #041020; }
+
+/* finale */
+.finale__bg img { opacity: .18; filter: saturate(.3); }
+.finale__bg::after { background: linear-gradient(180deg, var(--paper), transparent 50%, var(--void)); }
+
+/* nav over the dark site never needs the light variant */
+.nav[data-tone="light"] .nav__pill { background: color-mix(in srgb, var(--void) 45%, transparent); color: #fff; border-color: var(--line-inv); }
+.nav[data-tone="light"] .nav__logo { color: #fff; }
+
+/* memory orbs: holographic cyan instead of warm colours */
+.orb { --glow: #9fdcff !important; }
+.orb__ball img { mix-blend-mode: screen; filter: grayscale(1) contrast(1.15) brightness(1.1); }
+.orb__ball { background: radial-gradient(circle at 35% 30%, #d9f3ff, #3a7fb8 55%, #071a33); }

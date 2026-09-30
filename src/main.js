@@ -16,6 +16,7 @@ import './styles/base.css';
 import './styles/story.css';
 import './styles/sections.css';
 import './styles/motion.css';
+import './styles/theme-b.css';
 
 import { initI18n, onLangChange } from './i18n.js';
 import { renderContent } from './render.js';

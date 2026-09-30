@@ -9,6 +9,10 @@ const CTA_ON = [0.92, 0.97];      // then the single Apply button arrives
 // Laptop screen corners (TL, TR, BR, BL) in the final video frame, as fractions of the 16:9 frame.
 // Measured on story-1080's last frame.
 const SCREEN_QUAD = [[0.3674, 0.4546], [0.5258, 0.4611], [0.535, 0.6551], [0.3797, 0.656]];
+// Phone screen corners in the mobile video's final frame (story-m).
+const PHONE_QUAD = [[0.45, 0.3], [0.55, 0.3], [0.55, 0.7], [0.45, 0.7]];
+// Narrow viewports get the phone ending (story-m) instead of the laptop one.
+const PHONE = matchMedia('(max-width: 760px)').matches;
 const SHOT_ASPECT = 1902 / 840;   // hero-screenshot.webp (nav bar cropped, its buttons painted out)
 const SHOT_BUTTON = [75 / 1902, 700 / 840]; // where the screenshot's own CTA sat — ours takes its place
 const FRAME_ASPECT = 16 / 9;
@@ -68,6 +72,7 @@ export function initStory({ reduced, onSiteState }) {
   const orbs = [...story.querySelectorAll('.orb')];
   const screen = story.querySelector('[data-screen]');
   const backdrop = story.querySelector('[data-backdrop]');
+  screen.classList.toggle('screen--phone', PHONE);
   const cta = story.querySelector('[data-cta]');
   const zoom = story.querySelector('[data-zoom]');
   const overlays = [...story.querySelectorAll('.story__grain, .story__vignette')];
@@ -89,10 +94,9 @@ export function initStory({ reduced, onSiteState }) {
   let targetTime = 0;
   let shownTime = 0;
   if (!reduced) {
-    const small = matchMedia('(max-width: 760px)').matches;
     // VP9 is about half the size; fall back to H.264 where WebM/VP9 isn't solid (older Safari)
     const ext = video.canPlayType('video/webm; codecs="vp9"') === 'probably' ? 'webm' : 'mp4';
-    video.src = `media/story-${small ? 720 : 1080}.${ext}`;
+    video.src = `media/${PHONE ? 'story-m' : 'story-1080'}.${ext}`;
     video.addEventListener('loadeddata', () => { hasVideo = true; story.classList.add('has-video'); }, { once: true });
     video.addEventListener('error', () => { hasVideo = false; }, { once: true });
     video.load();
@@ -166,7 +170,7 @@ export function initStory({ reduced, onSiteState }) {
 
     // laptop screen → IBSU site. Frame→viewport mapping follows object-fit: cover + the pan above.
     const ox = -overflow * left, oy = (H - fh) / 2;
-    const quad = SCREEN_QUAD.map(([x, y]) => [ox + x * fw, oy + y * fh]);
+    const quad = (PHONE ? PHONE_QUAD : SCREEN_QUAD).map(([x, y]) => [ox + x * fw, oy + y * fh]);
     // Push in uniformly until the rectangle inscribed in the screen covers the viewport
     const ix0 = Math.max(quad[0][0], quad[3][0]), ix1 = Math.min(quad[1][0], quad[2][0]);
     const iy0 = Math.max(quad[0][1], quad[1][1]), iy1 = Math.min(quad[2][1], quad[3][1]);
@@ -182,7 +186,10 @@ export function initStory({ reduced, onSiteState }) {
     // headline column (first ~480px of the shot) spans the viewport width.
     const fitW = Math.max(W, Math.min(H * SHOT_ASPECT, W * 1902 / 480)), fitH = fitW / SHOT_ASPECT;
     const fx = 0, fy = (H - fitH) / 2;
-    const target = [[fx, fy], [fx + fitW, fy], [fx + fitW, fy + fitH], [fx, fy + fitH]];
+    // The phone splash is laid out for the viewport itself, so it simply settles full-screen
+    const target = PHONE
+      ? [[0, 0], [W, 0], [W, H], [0, H]]
+      : [[fx, fy], [fx + fitW, fy], [fx + fitW, fy + fitH], [fx, fy + fitH]];
     const settle = gsap.parseEase('power2.inOut')(range(s, 0.45, 1));
     const shown = onScreen.map(([x, y], i) => [lerp(x, target[i][0], settle), lerp(y, target[i][1], settle)]);
     const on = range(p, SITE_ON[0], SITE_ON[1]);
@@ -192,6 +199,9 @@ export function initStory({ reduced, onSiteState }) {
     backdrop.style.opacity = clamp01(settle * 2.5);
     overlays.forEach((o) => { o.style.opacity = (o.classList.contains('story__grain') ? 0.07 : 1) * (1 - e); });
     const c = range(p, CTA_ON[0], CTA_ON[1]);
+    screen.inert = !(PHONE && c > 0.5);
+    screen.style.setProperty('--enter', c);
+    cta.hidden = PHONE;
     cta.style.opacity = c;
     cta.style.left = `${fx + SHOT_BUTTON[0] * fitW}px`;
     cta.style.top = `${fy + SHOT_BUTTON[1] * fitH}px`;

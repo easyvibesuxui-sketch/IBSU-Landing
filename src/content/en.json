@@ -18,18 +18,52 @@
     "scroll": "Scroll to begin",
     "age": "Age",
     "chapters": [
-      { "n": "№ 01", "kicker": "The first page", "line": "Every story starts with a question." },
-      { "n": "№ 02", "kicker": "Closing the book", "line": "Then, one day, you go looking for the answer." },
-      { "n": "№ 03", "kicker": "Growing up", "line": "Every step, a little taller. Every year, a little braver." },
-      { "n": "№ 04", "kicker": "The next chapter", "line": "Until you find the place where it all comes together." }
+      {
+        "n": "№ 01",
+        "kicker": "The first page",
+        "line": "Every story starts with a question."
+      },
+      {
+        "n": "№ 02",
+        "kicker": "Closing the book",
+        "line": "Then, one day, you go looking for the answer."
+      },
+      {
+        "n": "№ 03",
+        "kicker": "Growing up",
+        "line": "Every step, a little taller. Every year, a little braver."
+      },
+      {
+        "n": "№ 04",
+        "kicker": "The next chapter",
+        "line": "Until you find the place where it all comes together."
+      }
     ],
     "memories": [
-      { "k": "kindergarten", "label": "Kindergarten" },
-      { "k": "school", "label": "First day of school" },
-      { "k": "sport", "label": "The first match" },
-      { "k": "parents", "label": "Mum & Dad" },
-      { "k": "grandparents", "label": "Grandma & Grandpa" },
-      { "k": "friends", "label": "Friends for life" }
+      {
+        "k": "kindergarten",
+        "label": "Kindergarten"
+      },
+      {
+        "k": "school",
+        "label": "First day of school"
+      },
+      {
+        "k": "sport",
+        "label": "The first match"
+      },
+      {
+        "k": "parents",
+        "label": "Mum & Dad"
+      },
+      {
+        "k": "grandparents",
+        "label": "Grandma & Grandpa"
+      },
+      {
+        "k": "friends",
+        "label": "Friends for life"
+      }
     ]
   },
   "hero": {
@@ -37,16 +71,29 @@
     "title": "Georgia’s first English-language university.",
     "lede": "Five schools, one courtyard. IBSU brings world-class, practice-based education — and the partnership of MIT, the world’s leading university — to the heart of Tbilisi.",
     "start": "Start",
-    "apply": "Apply to IBSU"
+    "apply": "Apply to IBSU",
+    "enter": "Enter"
   },
   "why": {
     "eyebrow": "Why IBSU",
     "title": "Your chapter starts here.",
     "stats": [
-      { "value": "1995", "label": "Founded in Tbilisi" },
-      { "value": "5", "label": "Schools, one courtyard" },
-      { "value": "18", "label": "Bachelor’s programmes" },
-      { "value": "50%", "label": "Top internal grant" }
+      {
+        "value": "1995",
+        "label": "Founded in Tbilisi"
+      },
+      {
+        "value": "5",
+        "label": "Schools, one courtyard"
+      },
+      {
+        "value": "18",
+        "label": "Bachelor’s programmes"
+      },
+      {
+        "value": "50%",
+        "label": "Top internal grant"
+      }
     ]
   },
   "schools": {
@@ -56,7 +103,10 @@
     "law": "Law & State Governance",
     "medicine": "Medicine"
   },
-  "langs": { "ka": "Georgian", "en": "English" },
+  "langs": {
+    "ka": "Georgian",
+    "en": "English"
+  },
   "programs": {
     "eyebrow": "Programmes",
     "title": "Choose the story you want to write.",
@@ -94,10 +144,22 @@
     "title": "Four steps to your first day.",
     "code": "University code",
     "steps": [
-      { "title": "Register for the Unified National Exams", "body": "Admission to IBSU is based on the results of the Unified National Exams, run by the National Assessment and Examinations Center (NAEC)." },
-      { "title": "Put IBSU — code 064 — first", "body": "When you list programmes during registration, give IBSU first place. It matters for enrolment, and it earns you a 20% IBSU Priority grant." },
-      { "title": "Sit the exams and get your results", "body": "Your scores decide enrolment — and whether you land in the TOP 50 or TOP 51–150 for a 50% or 25% grant." },
-      { "title": "Enrol at IBSU", "body": "Sign your contract, choose a payment plan — Georgian citizens can spread tuition over 8 months — and start your first semester." }
+      {
+        "title": "Register for the Unified National Exams",
+        "body": "Admission to IBSU is based on the results of the Unified National Exams, run by the National Assessment and Examinations Center (NAEC)."
+      },
+      {
+        "title": "Put IBSU — code 064 — first",
+        "body": "When you list programmes during registration, give IBSU first place. It matters for enrolment, and it earns you a 20% IBSU Priority grant."
+      },
+      {
+        "title": "Sit the exams and get your results",
+        "body": "Your scores decide enrolment — and whether you land in the TOP 50 or TOP 51–150 for a 50% or 25% grant."
+      },
+      {
+        "title": "Enrol at IBSU",
+        "body": "Sign your contract, choose a payment plan — Georgian citizens can spread tuition over 8 months — and start your first semester."
+      }
     ],
     "intl": {
       "title": "Applying from abroad?",
@@ -119,11 +181,26 @@
     "none": "No grant selected",
     "keep": "To keep a grant, your GPA must stay above 71 at the end of each year.",
     "list": {
-      "top50": { "title": "TOP 50", "body": "Among the top 50 students enrolled through the national exams." },
-      "gold": { "title": "Gold medal", "body": "You graduated school with a gold medal." },
-      "top150": { "title": "TOP 51–150", "body": "Among students ranked 51–150 at enrolment." },
-      "priority": { "title": "IBSU Priority", "body": "You listed IBSU first at exam registration." },
-      "creative": { "title": "Creative tour", "body": "Architecture or Graphic Design — pass IBSU’s creative tour." }
+      "top50": {
+        "title": "TOP 50",
+        "body": "Among the top 50 students enrolled through the national exams."
+      },
+      "gold": {
+        "title": "Gold medal",
+        "body": "You graduated school with a gold medal."
+      },
+      "top150": {
+        "title": "TOP 51–150",
+        "body": "Among students ranked 51–150 at enrolment."
+      },
+      "priority": {
+        "title": "IBSU Priority",
+        "body": "You listed IBSU first at exam registration."
+      },
+      "creative": {
+        "title": "Creative tour",
+        "body": "Architecture or Graphic Design — pass IBSU’s creative tour."
+      }
     },
     "cta": "Official fees & calculator"
   },
@@ -131,23 +208,69 @@
     "eyebrow": "Before you apply",
     "title": "Try IBSU on before it’s yours.",
     "cards": [
-      { "k": "open", "title": "Open Day", "body": "Visit the campus and get your questions answered in person.", "cta": "Register" },
-      { "k": "career", "title": "Career guidance", "body": "Advice and practical exercises from successful specialists to help you plan your career.", "cta": "Get access" },
-      { "k": "profession", "title": "Choose a profession", "body": "Take the tests and find out which field fits you best.", "cta": "Take the test" }
+      {
+        "k": "open",
+        "title": "Open Day",
+        "body": "Visit the campus and get your questions answered in person.",
+        "cta": "Register"
+      },
+      {
+        "k": "career",
+        "title": "Career guidance",
+        "body": "Advice and practical exercises from successful specialists to help you plan your career.",
+        "cta": "Get access"
+      },
+      {
+        "k": "profession",
+        "title": "Choose a profession",
+        "body": "Take the tests and find out which field fits you best.",
+        "cta": "Take the test"
+      }
     ],
     "trainings": "Trainings for pupils",
     "trainingsCta": "All trainings",
-    "trainingList": ["Debate championship", "First step in architecture", "Digital school", "American studies", "Business ABC", "Journalism for pupils", "Ask a psychologist", "Geopolitical games", "Mock trial", "The art of negotiation", "State organisation", "Project management", "Public speaking championship", "EconoMind", "Model UN"]
+    "trainingList": [
+      "Debate championship",
+      "First step in architecture",
+      "Digital school",
+      "American studies",
+      "Business ABC",
+      "Journalism for pupils",
+      "Ask a psychologist",
+      "Geopolitical games",
+      "Mock trial",
+      "The art of negotiation",
+      "State organisation",
+      "Project management",
+      "Public speaking championship",
+      "EconoMind",
+      "Model UN"
+    ]
   },
   "faq": {
     "eyebrow": "FAQ",
     "title": "Questions applicants ask.",
     "items": [
-      { "q": "How do I get into IBSU?", "a": "Through the Unified National Exams. When you register, put IBSU (code 064) first in your list of programmes." },
-      { "q": "Can I study in English?", "a": "Yes. IBSU is Georgia’s first English-language university. Programmes are taught in English, Georgian or both — each card above shows the language." },
-      { "q": "Can I combine grants?", "a": "No — if you qualify for two or more internal grants, the highest one applies." },
-      { "q": "How do I keep my grant?", "a": "Keep your GPA above 71 at the end of every academic year." },
-      { "q": "Can I pay in instalments?", "a": "Georgian citizens can spread tuition over 8 months with a flexible payment schedule." }
+      {
+        "q": "How do I get into IBSU?",
+        "a": "Through the Unified National Exams. When you register, put IBSU (code 064) first in your list of programmes."
+      },
+      {
+        "q": "Can I study in English?",
+        "a": "Yes. IBSU is Georgia’s first English-language university. Programmes are taught in English, Georgian or both — each card above shows the language."
+      },
+      {
+        "q": "Can I combine grants?",
+        "a": "No — if you qualify for two or more internal grants, the highest one applies."
+      },
+      {
+        "q": "How do I keep my grant?",
+        "a": "Keep your GPA above 71 at the end of every academic year."
+      },
+      {
+        "q": "Can I pay in instalments?",
+        "a": "Georgian citizens can spread tuition over 8 months with a flexible payment schedule."
+      }
     ]
   },
   "cta": {

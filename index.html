@@ -51,7 +51,16 @@
       </div>
       <!-- Navy backdrop + the IBSU site screenshot, pinned to the laptop screen with a homography -->
       <div class="story__backdrop" data-backdrop aria-hidden="true"></div>
-      <div class="screen" data-screen aria-hidden="true"><img src="media/hero-screenshot.webp" alt="" /></div>
+      <div class="screen" data-screen>
+        <img class="screen__shot" src="media/hero-screenshot.webp" alt="" aria-hidden="true" />
+        <!-- Mobile ending: the phone opens an IBSU app-style splash; its button is the real CTA -->
+        <div class="screen__app">
+          <svg class="screen__logo" viewBox="0 0 64 40" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6"><ellipse cx="32" cy="17" rx="13" ry="13"/><path d="M19 17h26M32 4c-5 4-5 22 0 26M32 4c5 4 5 22 0 26M21 10h22M21 24h22"/><path d="M2 12h14M2 17h13M2 22h14M48 12h14M49 17h13M48 22h14" stroke-width="1.2"/></g><text x="32" y="39" text-anchor="middle" font-family="Source Serif 4 Variable, serif" font-size="9" fill="currentColor" letter-spacing="1">IBSU</text></svg>
+          <p class="screen__name" data-i18n="hero.eyebrow">International Black Sea University · Tbilisi</p>
+          <a class="btn btn--yellow btn--xl screen__enter" href="https://ibsu.edu.ge/"><span data-i18n="hero.enter">Enter</span>
+            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 5.5 15.5 10 11 14.5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></a>
+        </div>
+      </div>
       <div class="story__grain" aria-hidden="true"></div>
       <div class="story__vignette" aria-hidden="true"></div>
 

@@ -113,6 +113,19 @@
 }
 .screen.is-live { visibility: visible; }
 .screen img { width: 100%; height: 100%; object-fit: fill; }
+.screen__app { display: none; }
+.screen--phone .screen__shot { display: none; }
+.screen--phone .screen__app {
+  position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px;
+  padding: 32px 24px; text-align: center; color: #fff;
+  background:
+    radial-gradient(70% 45% at 50% 38%, color-mix(in srgb, #9fdcff 22%, transparent), transparent 70%),
+    linear-gradient(180deg, #071431, #00205c 60%, #020a1c);
+}
+.screen--phone.is-live { pointer-events: auto; }
+.screen__logo { width: min(46vw, 200px); height: auto; filter: drop-shadow(0 0 24px rgba(159, 220, 255, .55)); }
+.screen__name { max-width: 24ch; font: 500 .74rem/1.5 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: color-mix(in srgb, #9fdcff 80%, #fff); }
+.screen__enter { margin-top: 18px; opacity: var(--enter, 0); transform: translateY(calc((1 - var(--enter, 0)) * 16px)); }
 .story__cta {
   position: absolute; left: 50%; top: 70%; z-index: 6;
   opacity: 0; transform: translate3d(-50%, 24px, 0);
