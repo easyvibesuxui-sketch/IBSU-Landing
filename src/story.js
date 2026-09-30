@@ -24,9 +24,9 @@ const focusAt = (t) => {
   const [t0, x0] = FOCUS[i - 1], [t1, x1] = FOCUS[i];
   return x0 + (x1 - x0) * clamp01((t - t0) / (t1 - t0 || 1));
 };
-const CHAPTERS = [[0.01, 0.12], [0.14, 0.3], [0.31, 0.46], [0.48, 0.62], [0.64, 0.76]];
+const CHAPTERS = [[0.01, 0.12], [0.14, 0.3], [0.31, 0.46], [0.54, 0.66], [0.67, 0.77]];
 // Resting points for the "sticky" scroll: top, each chapter at full strength, the lit screen, the CTA
-export const SNAP_POINTS = [0, 0.065, 0.22, 0.385, 0.55, 0.7, 0.8, 1];
+export const SNAP_POINTS = [0, 0.065, 0.22, 0.385, 0.605, 0.72, 0.8, 1];
 const MEMORIES = [0.18, 0.46];     // core-memory orbs drift past on the way down
 const AGE = [[0.16, 6], [0.46, 17]];
 
