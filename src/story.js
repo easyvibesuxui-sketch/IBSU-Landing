@@ -3,7 +3,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 // Story timeline, as fractions of the pinned scroll distance.
 const VIDEO_END = 0.78;           // video (or keyframe fallback) plays across 0 → VIDEO_END
-const SITE_ON = [0.77, 0.81];     // the IBSU site lights up on the laptop screen
+const SITE_ON = [0.785, 0.81];    // the IBSU site lights up on the laptop screen (after the video has ended)
 const SCREEN = [0.81, 0.95];      // camera pushes into the screen, the site settles full-view
 const CTA_ON = [0.92, 0.97];      // then the single Apply button arrives
 // Laptop screen corners (TL, TR, BR, BL) in the final video frame, as fractions of the 16:9 frame.
@@ -104,8 +104,12 @@ export function initStory({ reduced, onSiteState }) {
     video.load();
     gsap.ticker.add(() => {
       if (!hasVideo || video.seeking) return;
-      shownTime += (targetTime - shownTime) * 0.18;
+      // Once the screen phase starts, jump straight to the last frame: the overlay and the
+      // push-in are measured on it, and a lagging video would leave them floating off the screen.
+      const atScreen = lastP >= SITE_ON[0];
+      shownTime = atScreen ? targetTime : shownTime + (targetTime - shownTime) * 0.18;
       if (Math.abs(video.currentTime - shownTime) > 1 / 60) video.currentTime = shownTime;
+      if (endReady() !== wasReady) render(lastP);
     });
   }
 
@@ -122,7 +126,13 @@ export function initStory({ reduced, onSiteState }) {
   };
 
   let siteState = null;
+  // The screen overlay and zoom only line up with the video's final frame
+  const endReady = () => !hasVideo || !video.duration || video.currentTime >= video.duration - 0.12;
+  let wasReady = true;
+  let lastP = 0;
   function render(p) {
+    lastP = p;
+    const ready = (wasReady = endReady());
     // media
     const vp = range(p, 0, VIDEO_END);
     const W = stage.clientWidth, H = stage.clientHeight;
@@ -176,7 +186,7 @@ export function initStory({ reduced, onSiteState }) {
     // Push in uniformly until the rectangle inscribed in the screen covers the viewport
     const ix0 = Math.max(quad[0][0], quad[3][0]), ix1 = Math.min(quad[1][0], quad[2][0]);
     const iy0 = Math.max(quad[0][1], quad[1][1]), iy1 = Math.min(quad[2][1], quad[3][1]);
-    const s = range(p, SCREEN[0], SCREEN[1]);
+    const s = ready ? range(p, SCREEN[0], SCREEN[1]) : 0;
     const e = gsap.parseEase('power3.inOut')(s);
     const Z = lerp(1, Math.max(W / (ix1 - ix0), H / (iy1 - iy0)), e);
     const cx = (ix0 + ix1) / 2, cy = (iy0 + iy1) / 2;
@@ -194,7 +204,7 @@ export function initStory({ reduced, onSiteState }) {
       : [[fx, fy], [fx + fitW, fy], [fx + fitW, fy + fitH], [fx, fy + fitH]];
     const settle = gsap.parseEase('power2.inOut')(range(s, 0.45, 1));
     const shown = onScreen.map(([x, y], i) => [lerp(x, target[i][0], settle), lerp(y, target[i][1], settle)]);
-    const on = range(p, SITE_ON[0], SITE_ON[1]);
+    const on = ready ? range(p, SITE_ON[0], SITE_ON[1]) : 0;
     screen.classList.toggle('is-live', on > 0);
     screen.style.opacity = on;
     if (on > 0) screen.style.transform = quadMatrix(W, H, shown);
