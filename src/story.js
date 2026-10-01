@@ -7,8 +7,8 @@ const SITE_ON = [0.785, 0.81];    // the IBSU site lights up on the laptop scree
 const SCREEN = [0.81, 0.95];      // camera pushes into the screen, the site settles full-view
 const CTA_ON = [0.92, 0.97];      // then the single Apply button arrives
 // Laptop screen corners (TL, TR, BR, BL) in the final video frame, as fractions of the 16:9 frame.
-// Measured on story-1080's last frame; the right edge stops short of the arm that crosses the screen.
-const SCREEN_QUAD = [[0.371, 0.459], [0.5137, 0.4627], [0.511, 0.597], [0.377, 0.597]];
+// Measured on the inner (dotted) screen edge of story-1080's last frame.
+const SCREEN_QUAD = [[0.3698, 0.4553], [0.5286, 0.4599], [0.5434, 0.6581], [0.3837, 0.6558]];
 // Phone screen corners in the mobile video's final frame (story-m). Until the phone clip lands,
 // story-m ends on the laptop too.
 const PHONE_QUAD = SCREEN_QUAD;
@@ -103,7 +103,8 @@ export function initStory({ reduced, onSiteState }) {
     video.addEventListener('error', () => { hasVideo = false; }, { once: true });
     video.load();
     gsap.ticker.add(() => {
-      if (!hasVideo || video.seeking) return;
+      if (!hasVideo) return;
+      if (video.seeking) { if (wasReady) render(lastP); return; }
       // Once the screen phase starts, jump straight to the last frame: the overlay and the
       // push-in are measured on it, and a lagging video would leave them floating off the screen.
       const atScreen = lastP >= SITE_ON[0];
@@ -127,7 +128,7 @@ export function initStory({ reduced, onSiteState }) {
 
   let siteState = null;
   // The screen overlay and zoom only line up with the video's final frame
-  const endReady = () => !hasVideo || !video.duration || video.currentTime >= video.duration - 0.12;
+  const endReady = () => !hasVideo || !video.duration || (!video.seeking && video.currentTime >= video.duration - 0.12);
   let wasReady = true;
   let lastP = 0;
   function render(p) {
