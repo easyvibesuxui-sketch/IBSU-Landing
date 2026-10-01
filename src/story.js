@@ -7,10 +7,11 @@ const SITE_ON = [0.77, 0.81];     // the IBSU site lights up on the laptop scree
 const SCREEN = [0.81, 0.95];      // camera pushes into the screen, the site settles full-view
 const CTA_ON = [0.92, 0.97];      // then the single Apply button arrives
 // Laptop screen corners (TL, TR, BR, BL) in the final video frame, as fractions of the 16:9 frame.
-// Measured on story-1080's last frame; the left edge starts right of the hair that overlaps the screen.
-const SCREEN_QUAD = [[0.4358, 0.278], [0.6441, 0.2861], [0.643, 0.5787], [0.4358, 0.559]];
-// Phone screen corners in the mobile video's final frame (story-m).
-const PHONE_QUAD = [[0.4598, 0.137], [0.6602, 0.1463], [0.6106, 0.8991], [0.4139, 0.8426]];
+// Measured on story-1080's last frame; the right edge stops short of the arm that crosses the screen.
+const SCREEN_QUAD = [[0.371, 0.459], [0.5137, 0.4627], [0.511, 0.597], [0.377, 0.597]];
+// Phone screen corners in the mobile video's final frame (story-m). Until the phone clip lands,
+// story-m ends on the laptop too.
+const PHONE_QUAD = SCREEN_QUAD;
 // Narrow viewports get the phone ending (story-m) instead of the laptop one.
 const PHONE = matchMedia('(max-width: 760px)').matches;
 const SHOT_ASPECT = 1902 / 840;   // hero-screenshot.webp (nav bar cropped, its buttons painted out)
@@ -18,7 +19,7 @@ const SHOT_BUTTON = [75 / 1902, 700 / 840]; // where the screenshot's own CTA sa
 const FRAME_ASPECT = 16 / 9;
 // Where the subject is (x as a fraction of the frame) over video time 0 → 1. On narrow screens
 // object-fit: cover crops most of the 16:9 frame, so the visible window follows them.
-const FOCUS = [[0, 0.27], [0.2, 0.36], [0.25, 0.38], [0.5, 0.47], [0.75, 0.5], [0.8, 0.55], [0.86, 0.62], [0.93, 0.58], [1, PHONE ? 0.5 : 0.45]];
+const FOCUS = [[0, 0.27], [0.25, 0.33], [0.35, 0.4], [0.5, 0.45], [0.75, 0.47], [0.85, 0.55], [0.93, 0.5], [1, PHONE ? 0.5 : 0.44]];
 const focusAt = (t) => {
   const i = Math.max(1, FOCUS.findIndex(([k]) => k >= t));
   const [t0, x0] = FOCUS[i - 1], [t1, x1] = FOCUS[i];
