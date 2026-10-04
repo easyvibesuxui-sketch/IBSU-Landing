@@ -1,9 +1,10 @@
 name: Deploy to GitHub Pages
 
-# Builds both versions into one Pages site:
+# Builds all versions into one Pages site:
 #   A (this branch)              → /IBSU-Landing/
 #   B (claude/ibsu-landing-b)    → /IBSU-Landing/b/
-# Pushes to B trigger this workflow via workflow_dispatch (see trigger-pages.yml on B).
+#   C (claude/ibsu-landing-c)    → /IBSU-Landing/c/
+# Pushes to B and C trigger this workflow via workflow_dispatch (see trigger-pages.yml there).
 on:
   push:
     branches: [claude/nifty-heisenberg-aqmakx]
@@ -32,6 +33,10 @@ jobs:
         with:
           ref: claude/ibsu-landing-b
           path: b
+      - uses: actions/checkout@v4
+        with:
+          ref: claude/ibsu-landing-c
+          path: c
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -41,12 +46,17 @@ jobs:
       - name: Build B
         working-directory: b
         run: npm ci && npm run build
+      - name: Build C
+        working-directory: c
+        run: npm ci && npm run build
       - name: Combine
         run: |
           mkdir site
           cp -r a/dist/. site/
           mkdir site/b
           cp -r b/dist/. site/b/
+          mkdir site/c
+          cp -r c/dist/. site/c/
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
