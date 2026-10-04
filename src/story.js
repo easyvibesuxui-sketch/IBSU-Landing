@@ -199,7 +199,9 @@ export function initStory({ reduced, onSiteState }) {
     const fitW = Math.max(W, Math.min(H * SHOT_ASPECT, W * 1902 / 480)), fitH = fitW / SHOT_ASPECT;
     const fx = 0, fy = (H - fitH) / 2;
     const target = [[fx, fy], [fx + fitW, fy], [fx + fitW, fy + fitH], [fx, fy + fitH]];
-    const settle = gsap.parseEase('power2.inOut')(range(s, 0.45, 1));
+    // Stay glued to the laptop screen while the camera pushes in; relax only once the screen
+    // already fills the viewport, so the site never floats over the people around it.
+    const settle = gsap.parseEase('power2.inOut')(range(s, 0.82, 1));
     const shown = onScreen.map(([x, y], i) => [lerp(x, target[i][0], settle), lerp(y, target[i][1], settle)]);
     const on = ready ? range(p, SITE_ON[0], SITE_ON[1]) : 0;
     screen.classList.toggle('is-live', on > 0);
