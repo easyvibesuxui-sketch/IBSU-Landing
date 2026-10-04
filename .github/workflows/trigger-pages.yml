@@ -1,0 +1,18 @@
+name: Rebuild Pages (C)
+
+# The Pages environment deploys from the default branch, so a push here asks the
+# default branch's workflow to rebuild the combined site (A at /, B at /b/, C at /c/).
+on:
+  push:
+    branches: [claude/ibsu-landing-c]
+
+permissions:
+  actions: write
+
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+    steps:
+      - run: gh workflow run pages.yml --repo "$GITHUB_REPOSITORY" --ref claude/nifty-heisenberg-aqmakx
+        env:
+          GH_TOKEN: ${{ github.token }}
