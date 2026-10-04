@@ -106,8 +106,6 @@
 @keyframes wheel { 0% { transform: translateY(0); opacity: 1; } 70% { transform: translateY(8px); opacity: 0; } 100% { opacity: 0; } }
 
 /* ─── Laptop screen → IBSU site ─── */
-.story__front { position: absolute; inset: 0; transform-origin: 0 0; pointer-events: none; opacity: 0; }
-.story__front img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .story__backdrop { position: absolute; inset: 0; background: var(--ox-blue); opacity: 0; pointer-events: none; }
 .screen {
   position: absolute; left: 0; top: 0; width: 100%; height: 100%;
@@ -120,13 +118,24 @@
   /* Fade all four edges (and so the corners) over --feather, like light glowing on a screen */
   -webkit-mask-image:
     linear-gradient(to right, transparent, #000 var(--feather, 0px), #000 calc(100% - var(--feather, 0px)), transparent),
-    linear-gradient(to bottom, transparent, #000 var(--feather, 0px), #000 calc(100% - var(--feather, 0px)), transparent);
-  -webkit-mask-composite: source-in;
+    linear-gradient(to bottom, transparent, #000 var(--feather, 0px), #000 calc(100% - var(--feather, 0px)), transparent),
+    var(--hand-hole, linear-gradient(#000, #000));
+  -webkit-mask-composite: source-in, source-in;
+  -webkit-mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
   mask-image:
     linear-gradient(to right, transparent, #000 var(--feather, 0px), #000 calc(100% - var(--feather, 0px)), transparent),
-    linear-gradient(to bottom, transparent, #000 var(--feather, 0px), #000 calc(100% - var(--feather, 0px)), transparent);
+    linear-gradient(to bottom, transparent, #000 var(--feather, 0px), #000 calc(100% - var(--feather, 0px)), transparent),
+    var(--hand-hole, linear-gradient(#000, #000));
   mask-composite: intersect;
+  mask-size: 100% 100%;
+  mask-repeat: no-repeat;
 }
+/* The boy's hand and sleeve cover the lower-left of the laptop screen in the last frame: leave a
+   soft hand-shaped hole there so the video shows through and the site sits behind his hand.
+   Drawn in screen-box units (0–1000), traced from the final frame. */
+.screen { --hand-hole: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 1000' preserveAspectRatio='none'%3E%3Cfilter id='s' x='-10%25' y='-10%25' width='120%25' height='120%25'%3E%3CfeGaussianBlur stdDeviation='7'/%3E%3C/filter%3E%3Cpath filter='url%28%23s%29' fill-rule='evenodd' d='M-100 -100 H1100 V1100 H-100 Z M-50 418 L4 437 L12 456 L18 475 L26 494 L32 513 L38 532 L44 551 L48 570 L50 589 L56 608 L60 627 L71 646 L103 665 L115 684 L119 703 L123 722 L123 741 L127 760 L127 779 L130 798 L134 817 L138 836 L142 855 L150 874 L170 893 L178 912 L186 931 L194 950 L197 969 L201 989 L201 1050 L-50 1050 Z'/%3E%3C/svg%3E"); }
+.screen.is-full { --hand-hole: linear-gradient(#000, #000); }
 .screen { mask-repeat: no-repeat; -webkit-mask-repeat: no-repeat; }
 /* The firefly's glow sits where the ink starts and fades as the site spreads. It rides an
    unmasked twin of .screen (same transform), so the ink mask never clips it. */

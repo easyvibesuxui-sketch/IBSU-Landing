@@ -75,8 +75,6 @@ export function initStory({ reduced, onSiteState }) {
   const backdrop = story.querySelector('[data-backdrop]');
   const firefly = story.querySelector('[data-firefly]');
   const glow = story.querySelector('[data-glow]');
-  const front = story.querySelector('[data-front]');
-  const plate = front.querySelector('img');
   const cta = story.querySelector('[data-cta]');
   const zoom = story.querySelector('[data-zoom]');
   const overlays = [...story.querySelectorAll('.story__grain, .story__vignette')];
@@ -130,7 +128,7 @@ export function initStory({ reduced, onSiteState }) {
 
   let siteState = null;
   // The screen overlay and zoom only line up with the video's final frame
-  const endReady = () => !hasVideo || !video.duration || (!video.seeking && video.currentTime >= video.duration - 0.12);
+  const endReady = () => !hasVideo || !video.duration || (!video.seeking && video.readyState >= 2 && video.currentTime >= video.duration - 0.12);
   let wasReady = true;
   let lastP = 0;
   function render(p) {
@@ -144,7 +142,6 @@ export function initStory({ reduced, onSiteState }) {
     const left = overflow ? clamp01((focusAt(vp) * fw - W / 2) / overflow) : 0.5; // object-position x
     const pos = `${left * 100}% 50%`;
     video.style.objectPosition = pos;
-    plate.style.objectPosition = pos;
     frames.forEach((img) => { img.style.objectPosition = pos; });
     if (hasVideo && video.duration) targetTime = vp * (video.duration - 0.05);
     if (!hasVideo) {
@@ -196,7 +193,6 @@ export function initStory({ reduced, onSiteState }) {
     const cx = (ix0 + ix1) / 2, cy = (iy0 + iy1) / 2;
     const tx = lerp(0, W / 2 - cx * Z, e) + (1 - e) * cx * (1 - Z), ty = lerp(0, H / 2 - cy * Z, e) + (1 - e) * cy * (1 - Z);
     zoom.style.transform = s > 0 ? `translate(${tx}px, ${ty}px) scale(${Z})` : '';
-    front.style.transform = zoom.style.transform;
     // Screenshot rides the zoomed screen, then relaxes into an undistorted, fully visible frame
     const onScreen = quad.map(([x, y]) => [tx + x * Z, ty + y * Z]);
     // Anchored left where the headline lives: cover on landscape; on portrait, scale so the
@@ -234,8 +230,8 @@ export function initStory({ reduced, onSiteState }) {
     if (on > 0) screen.style.transform = glow.style.transform = quadMatrix(W, H, shown);
     // Rounded, feathered edges while the site sits on the laptop screen; sharp once it is full view
     screen.style.setProperty('--feather', `${(1 - settle) * Math.min(W, H) * 0.06}px`);
+    screen.classList.toggle('is-full', settle > 0.3); // drop the hand hole once the site leaves the laptop
     glow.classList.toggle('is-live', on > 0 && on < 1);
-    front.style.opacity = on > 0 ? 1 - settle : 0;
     backdrop.style.opacity = clamp01(settle * 2.5);
     overlays.forEach((o) => { o.style.opacity = (o.classList.contains('story__grain') ? 0.07 : 1) * (1 - e); });
     const c = range(p, CTA_ON[0], CTA_ON[1]);
