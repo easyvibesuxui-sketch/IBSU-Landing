@@ -24,11 +24,11 @@ const focusAt = (t) => {
   const [t0, x0] = FOCUS[i - 1], [t1, x1] = FOCUS[i];
   return x0 + (x1 - x0) * clamp01((t - t0) / (t1 - t0 || 1));
 };
-const CHAPTERS = [[0.01, 0.12], [0.13, 0.25], [0.28, 0.52], [0.56, 0.74]];
+const CHAPTERS = [[0.01, 0.13], [0.15, 0.3], [0.32, 0.5], [0.54, 0.74]];
 // Resting points for the "sticky" scroll: top, each chapter at full strength, the lit laptop, the CTA
-export const SNAP_POINTS = [0, 0.065, 0.19, 0.4, 0.65, 0.8, 1];
-const MEMORIES = [0.22, 0.62];     // core-memory orbs drift past while he grows up
-const AGE = [[0.2, 6], [0.6, 17]];
+export const SNAP_POINTS = [0, 0.07, 0.225, 0.41, 0.64, 0.8, 1];
+const MEMORIES = [0.17, 0.5];      // core-memory orbs drift past while they grow up
+const AGE = [[0.15, 6], [0.6, 18]];
 
 const clamp01 = (v) => Math.min(1, Math.max(0, v));
 const lerp = (a, b, t) => a + (b - a) * t;

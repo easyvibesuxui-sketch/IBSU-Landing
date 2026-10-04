@@ -1,9 +1,9 @@
 // Builds web media from the Kling sources in assets-src/.
-//   assets-src/clips/c1.mp4 … c5.mp4   → public/media/story-1080.mp4, story-720.mp4 (all-intra, scrub-friendly)
+//   assets-src/clips/c1.mp4 … c5.mp4   → public/media/story-1080.*, story-720.* (short GOP, scrub-friendly)
 //   assets-src/keyframes/k1.png … k6.png → public/media/frames/k*.webp (poster + no-video fallback)
 //   assets-src/memories/*.png           → public/media/memories/*.webp
 import { execFileSync } from 'node:child_process';
-import { existsSync, mkdirSync, readdirSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import ffmpeg from 'ffmpeg-static';
 
@@ -24,25 +24,18 @@ for (const f of list(join(src, 'memories'), '.png')) {
 
 const clips = list(join(src, 'clips'), '.mp4');
 if (clips.length) {
-  const listFile = join(src, 'clips', 'concat.txt');
-  writeFileSync(listFile, clips.map((c) => `file '${c}'`).join('\n'));
-  // Short GOP (keyframe every 8 frames, no B-frames) so currentTime seeks decode at most a few frames.
-  for (const [h, crf] of [[1080, 23], [720, 26]]) {
-    run([
-      '-f', 'concat', '-safe', '0', '-i', listFile, '-an',
-      '-vf', `scale=-2:${h},fps=24`,
-      '-c:v', 'libx264', '-preset', 'slow', '-crf', String(crf), '-g', '8', '-bf', '0', '-pix_fmt', 'yuv420p',
-      '-movflags', '+faststart', join(out, `story-${h}.mp4`),
-    ]);
-  }
-  // VP9 twin for browsers without H.264 (e.g. open-source Chromium builds)
-  for (const [h, crf] of [[1080, 36], [720, 38]]) {
-    run([
-      '-f', 'concat', '-safe', '0', '-i', listFile, '-an',
-      '-vf', `scale=-2:${h},fps=24`,
-      '-c:v', 'libvpx-vp9', '-b:v', '0', '-crf', String(crf), '-g', '8', '-row-mt', '1', '-deadline', 'good', '-cpu-used', '4',
-      '-pix_fmt', 'yuv420p', join(out, `story-${h}.webm`),
-    ]);
+  // Kling clips come in slightly different sizes (1916×1080, 1928×1072…), so normalise each before joining
+  for (const [h, crf264, crfvp9] of [[1080, 23, 36], [720, 26, 38]]) {
+    const w = Math.round((h * 16) / 9 / 2) * 2;
+    const norm = clips.map((_, i) => `[${i}:v]scale=${w}:${h}:force_original_aspect_ratio=increase,crop=${w}:${h},setsar=1,fps=24[v${i}]`).join(';');
+    const graph = `${norm};${clips.map((_, i) => `[v${i}]`).join('')}concat=n=${clips.length}:v=1:a=0[out]`;
+    const input = [...clips.flatMap((c) => ['-i', join(src, 'clips', c)]), '-filter_complex', graph, '-map', '[out]', '-an'];
+    // Short GOP (keyframe every 8 frames, no B-frames) so currentTime seeks decode at most a few frames.
+    run([...input, '-c:v', 'libx264', '-preset', 'slow', '-crf', String(crf264), '-g', '8', '-bf', '0', '-pix_fmt', 'yuv420p',
+      '-movflags', '+faststart', join(out, `story-${h}.mp4`)]);
+    // VP9 twin for browsers without H.264 (e.g. open-source Chromium builds)
+    run([...input, '-c:v', 'libvpx-vp9', '-b:v', '0', '-crf', String(crfvp9), '-g', '8', '-row-mt', '1', '-deadline', 'good', '-cpu-used', '4',
+      '-pix_fmt', 'yuv420p', join(out, `story-${h}.webm`)]);
   }
   console.log(`encoded ${clips.length} clips`);
 } else {
