@@ -60,35 +60,83 @@ document.querySelectorAll('.section--paper, .section--gray').forEach((sec) =>
   }),
 );
 
-// ── Sticky story: when scrolling rests inside the story, ease to the nearest key moment.
-// Only nearby points pull (within SNAP_REACH of the viewport), so long passages stay free. ?snap=0 turns it off.
+// ── Sticky story: inside the story each wheel flick or swipe glides to the next key moment
+// with an ease-in-out, so every scene lands and holds. Leaving past either end scrolls freely.
+// Keyboard / scrollbar rests still ease to a nearby moment. ?snap=0 turns it all off.
 const SNAP_REACH = 0.3;
+const easeInOut = (t) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
 if (lenis && new URLSearchParams(location.search).get('snap') !== '0') {
   const story = document.querySelector('.story');
-  let idle = 0;
-  let touching = false;
-  // Any user input takes over from an in-flight snap (Lenis cancels it without calling onComplete)
-  const userInput = () => { autoScrolling = false; };
-  addEventListener('wheel', userInput, { passive: true });
-  addEventListener('keydown', userInput);
-  addEventListener('touchstart', () => { touching = true; userInput(); }, { passive: true });
-  addEventListener('touchend', () => { touching = false; clearTimeout(idle); idle = setTimeout(trySnap, 160); }, { passive: true });
-  const trySnap = () => {
-    if (autoScrolling || touching) return;
+  const bounds = () => {
     const top = story.offsetTop;
     const span = story.offsetHeight - innerHeight;
+    return { top, span, points: SNAP_POINTS.map((p) => top + p * span) };
+  };
+  let idle = 0;
+  let touching = false;
+  let stepping = false;
+  let lastWheel = 0;
+  let wheelArmed = true; // re-armed only after the wheel goes quiet, so trackpad inertia can't skip scenes
+  let touchSum = 0;
+  let touchStepped = false;
+  const glide = (target, onDone) => {
+    const dist = Math.abs(target - lenis.scroll);
+    stepping = autoScrolling = true;
+    lenis.scrollTo(target, {
+      duration: Math.min(2.4, 1.1 + (dist / innerHeight) * 0.35),
+      easing: easeInOut,
+      lock: true,
+      force: true,
+      onComplete: () => { stepping = autoScrolling = false; onDone?.(); },
+    });
+  };
+  // Next key moment in the gesture's direction, or null when the gesture should leave the story
+  const nextPoint = (dir) => {
+    const { top, span, points } = bounds();
+    const y = lenis.scroll;
+    if (y < top - 2 || y > top + span + 2) return null;
+    return dir > 0 ? points.find((t) => t > y + 2) ?? null : [...points].reverse().find((t) => t < y - 2) ?? null;
+  };
+  lenis.options.virtualScroll = ({ deltaY, event }) => {
+    const type = event.type;
+    if (type === 'touchstart') { touchSum = 0; touchStepped = false; return true; }
+    if (type === 'touchend') return !stepping && !touchStepped;
+    const isWheel = type === 'wheel';
+    if (isWheel) {
+      const now = performance.now();
+      if (now - lastWheel > 140) wheelArmed = true;
+      lastWheel = now;
+    }
+    const dir = Math.sign(deltaY);
+    if (!dir) return true;
+    if (stepping) { if (event.cancelable) event.preventDefault(); return false; }
+    const target = nextPoint(dir);
+    if (target === null) return true;
+    if (event.cancelable) event.preventDefault();
+    if (isWheel) {
+      if (!wheelArmed || Math.abs(deltaY) < 4) return false;
+      wheelArmed = false;
+      glide(target);
+    } else {
+      touchSum += deltaY;
+      if (!touchStepped && Math.abs(touchSum) > 24) { touchStepped = true; glide(target); }
+    }
+    return false;
+  };
+
+  const userInput = () => { if (!stepping) autoScrolling = false; };
+  addEventListener('keydown', userInput);
+  addEventListener('touchstart', () => { touching = true; }, { passive: true });
+  addEventListener('touchend', () => { touching = false; }, { passive: true });
+  const trySnap = () => {
+    if (autoScrolling || touching) return;
+    const { top, span, points } = bounds();
     const y = lenis.scroll;
     if (y <= top || y >= top + span) return;
-    const target = SNAP_POINTS.map((p) => top + p * span)
-      .reduce((best, t) => (Math.abs(t - y) < Math.abs(best - y) ? t : best));
+    const target = points.reduce((best, t) => (Math.abs(t - y) < Math.abs(best - y) ? t : best));
     const dist = Math.abs(target - y);
     if (dist < 2 || dist > innerHeight * SNAP_REACH) return;
-    autoScrolling = true;
-    lenis.scrollTo(target, {
-      duration: Math.min(1.1, 0.45 + dist / innerHeight),
-      easing: (t) => 1 - (1 - t) ** 3,
-      onComplete: () => { autoScrolling = false; },
-    });
+    glide(target);
   };
   lenis.on('scroll', () => { clearTimeout(idle); idle = setTimeout(trySnap, 160); });
 }
