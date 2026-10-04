@@ -18,18 +18,16 @@
     "scroll": "Scroll to begin",
     "age": "Age",
     "chapters": [
-      { "n": "№ 01", "kicker": "The first page", "line": "Every story starts with a question." },
-      { "n": "№ 02", "kicker": "Closing the book", "line": "Then, one day, you go looking for the answer." },
+      { "n": "№ 01", "kicker": "The first page", "line": "Every story starts with a page you share." },
+      { "n": "№ 02", "kicker": "A little light", "line": "Then a little light shows you the way." },
       { "n": "№ 03", "kicker": "Growing up", "line": "Every step, a little taller. Every year, a little braver." },
-      { "n": "№ 04", "kicker": "The next chapter", "line": "Until you find the place where it all comes together." }
+      { "n": "№ 04", "kicker": "The next chapter", "line": "Until the light lands where it all begins." }
     ],
     "memories": [
+      { "k": "steps", "label": "First steps" },
       { "k": "kindergarten", "label": "Kindergarten" },
       { "k": "school", "label": "First day of school" },
-      { "k": "sport", "label": "The first match" },
-      { "k": "parents", "label": "Mum & Dad" },
-      { "k": "grandparents", "label": "Grandma & Grandpa" },
-      { "k": "friends", "label": "Friends for life" }
+      { "k": "sport", "label": "The first match" }
     ]
   },
   "hero": {

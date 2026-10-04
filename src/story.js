@@ -3,9 +3,13 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 // Story timeline, as fractions of the pinned scroll distance.
 const VIDEO_END = 0.78;           // video (or keyframe fallback) plays across 0 → VIDEO_END
-const SITE_ON = [0.77, 0.81];     // the IBSU site lights up on the laptop screen
-const SCREEN = [0.81, 0.95];      // camera pushes into the screen, the site settles full-view
-const CTA_ON = [0.92, 0.97];      // then the single Apply button arrives
+const SITE_ON = [0.785, 0.84];    // the firefly's light spreads over the laptop screen like ink, revealing the IBSU site
+const SCREEN = [0.84, 0.95];      // camera pushes into the screen, the site settles full-view
+const CTA_ON = [0.93, 0.98];      // then the single Apply button arrives
+// Where the firefly lands on the screen (fraction of the screen box) and the ink blobs that grow
+// from it: [dx, dy, delay, speed] relative to the screen size, for an organic, uneven edge.
+const INK_ORIGIN = [0.5, 0.45];
+const INK_BLOBS = [[0, 0, 0, 1], [0.12, -0.08, 0.08, 0.9], [-0.14, 0.1, 0.12, 0.85], [0.2, 0.18, 0.22, 0.8], [-0.22, -0.16, 0.26, 0.8], [0.04, 0.3, 0.3, 0.75], [-0.3, 0.32, 0.4, 0.7], [0.34, -0.3, 0.42, 0.7]];
 // Laptop screen corners (TL, TR, BR, BL) in the final video frame, as fractions of the 16:9 frame.
 // Measured on story-1080's last frame.
 const SCREEN_QUAD = [[0.3674, 0.4546], [0.5258, 0.4611], [0.535, 0.6551], [0.3797, 0.656]];
@@ -68,6 +72,8 @@ export function initStory({ reduced, onSiteState }) {
   const orbs = [...story.querySelectorAll('.orb')];
   const screen = story.querySelector('[data-screen]');
   const backdrop = story.querySelector('[data-backdrop]');
+  const firefly = story.querySelector('[data-firefly]');
+  const glow = story.querySelector('[data-glow]');
   const cta = story.querySelector('[data-cta]');
   const zoom = story.querySelector('[data-zoom]');
   const overlays = [...story.querySelectorAll('.story__grain, .story__vignette')];
@@ -97,9 +103,13 @@ export function initStory({ reduced, onSiteState }) {
     video.addEventListener('error', () => { hasVideo = false; }, { once: true });
     video.load();
     gsap.ticker.add(() => {
-      if (!hasVideo || video.seeking) return;
-      shownTime += (targetTime - shownTime) * 0.18;
+      if (!hasVideo) return;
+      if (video.seeking) { if (wasReady) render(lastP); return; }
+      // Once the screen phase starts, jump straight to the last frame: the overlay and the
+      // push-in are measured on it, and a lagging video would leave them floating off the screen.
+      shownTime = lastP >= SITE_ON[0] ? targetTime : shownTime + (targetTime - shownTime) * 0.18;
       if (Math.abs(video.currentTime - shownTime) > 1 / 60) video.currentTime = shownTime;
+      if (endReady() !== wasReady) render(lastP);
     });
   }
 
@@ -116,7 +126,13 @@ export function initStory({ reduced, onSiteState }) {
   };
 
   let siteState = null;
+  // The screen overlay and zoom only line up with the video's final frame
+  const endReady = () => !hasVideo || !video.duration || (!video.seeking && video.currentTime >= video.duration - 0.12);
+  let wasReady = true;
+  let lastP = 0;
   function render(p) {
+    lastP = p;
+    const ready = (wasReady = endReady());
     // media
     const vp = range(p, 0, VIDEO_END);
     const W = stage.clientWidth, H = stage.clientHeight;
@@ -170,7 +186,7 @@ export function initStory({ reduced, onSiteState }) {
     // Push in uniformly until the rectangle inscribed in the screen covers the viewport
     const ix0 = Math.max(quad[0][0], quad[3][0]), ix1 = Math.min(quad[1][0], quad[2][0]);
     const iy0 = Math.max(quad[0][1], quad[1][1]), iy1 = Math.min(quad[2][1], quad[3][1]);
-    const s = range(p, SCREEN[0], SCREEN[1]);
+    const s = ready ? range(p, SCREEN[0], SCREEN[1]) : 0;
     const e = gsap.parseEase('power3.inOut')(s);
     const Z = lerp(1, Math.max(W / (ix1 - ix0), H / (iy1 - iy0)), e);
     const cx = (ix0 + ix1) / 2, cy = (iy0 + iy1) / 2;
@@ -185,10 +201,25 @@ export function initStory({ reduced, onSiteState }) {
     const target = [[fx, fy], [fx + fitW, fy], [fx + fitW, fy + fitH], [fx, fy + fitH]];
     const settle = gsap.parseEase('power2.inOut')(range(s, 0.45, 1));
     const shown = onScreen.map(([x, y], i) => [lerp(x, target[i][0], settle), lerp(y, target[i][1], settle)]);
-    const on = range(p, SITE_ON[0], SITE_ON[1]);
+    const on = ready ? range(p, SITE_ON[0], SITE_ON[1]) : 0;
     screen.classList.toggle('is-live', on > 0);
-    screen.style.opacity = on;
-    if (on > 0) screen.style.transform = quadMatrix(W, H, shown);
+    screen.style.opacity = on > 0 ? 1 : 0;
+    // Ink: soft-edged circles grow from the firefly's landing point until they cover the screen box
+    const reach = Math.hypot(W, H);
+    const ink = INK_BLOBS.map(([dx, dy, d, sp]) => {
+      const g = gsap.parseEase('power2.out')(clamp01((on - d) / (1 - d)));
+      const r = g * sp * reach * 1.1;
+      const x = (INK_ORIGIN[0] + dx * g) * W, y = (INK_ORIGIN[1] + dy * g) * H;
+      return `radial-gradient(circle at ${x}px ${y}px, #000 ${r}px, transparent ${r + 18 + 40 * (1 - g)}px)`;
+    }).join(',');
+    const mask = on >= 1 ? 'none' : ink;
+    screen.style.maskImage = mask;
+    screen.style.webkitMaskImage = mask;
+    firefly.style.opacity = on > 0 && on < 1 ? 1 - on : 0;
+    firefly.style.setProperty('--x', `${INK_ORIGIN[0] * 100}%`);
+    firefly.style.setProperty('--y', `${INK_ORIGIN[1] * 100}%`);
+    if (on > 0) screen.style.transform = glow.style.transform = quadMatrix(W, H, shown);
+    glow.classList.toggle('is-live', on > 0 && on < 1);
     backdrop.style.opacity = clamp01(settle * 2.5);
     overlays.forEach((o) => { o.style.opacity = (o.classList.contains('story__grain') ? 0.07 : 1) * (1 - e); });
     const c = range(p, CTA_ON[0], CTA_ON[1]);
