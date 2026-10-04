@@ -12,7 +12,8 @@ const INK_ORIGIN = [0.5, 0.47];
 const INK_BLOBS = [[0, 0, 0, 1], [0.12, -0.08, 0.08, 0.9], [-0.14, 0.1, 0.12, 0.85], [0.2, 0.18, 0.22, 0.8], [-0.22, -0.16, 0.26, 0.8], [0.04, 0.3, 0.3, 0.75], [-0.3, 0.32, 0.4, 0.7], [0.34, -0.3, 0.42, 0.7]];
 // Laptop screen corners (TL, TR, BR, BL) in the final video frame, as fractions of the 16:9 frame.
 // Measured on story-1080's last frame.
-const SCREEN_QUAD = [[0.3714, 0.4046], [0.6438, 0.4046], [0.6438, 0.7065], [0.3714, 0.7065]];
+// Inset slightly from the measured edge so the soft-edged site stays inside the bezel.
+const SCREEN_QUAD = [[0.3754, 0.4096], [0.6398, 0.4096], [0.6398, 0.7015], [0.3754, 0.7015]];
 const SHOT_ASPECT = 1902 / 840;   // hero-screenshot.webp (nav bar cropped, its buttons painted out)
 const SHOT_BUTTON = [75 / 1902, 700 / 840]; // where the screenshot's own CTA sat — ours takes its place
 const FRAME_ASPECT = 16 / 9;
@@ -221,6 +222,8 @@ export function initStory({ reduced, onSiteState }) {
     firefly.style.setProperty('--x', `${INK_ORIGIN[0] * 100}%`);
     firefly.style.setProperty('--y', `${INK_ORIGIN[1] * 100}%`);
     if (on > 0) screen.style.transform = glow.style.transform = quadMatrix(W, H, shown);
+    // Rounded, feathered edges while the site sits on the laptop screen; sharp once it is full view
+    screen.style.setProperty('--feather', `${(1 - settle) * Math.min(W, H) * 0.06}px`);
     glow.classList.toggle('is-live', on > 0 && on < 1);
     backdrop.style.opacity = clamp01(settle * 2.5);
     overlays.forEach((o) => { o.style.opacity = (o.classList.contains('story__grain') ? 0.07 : 1) * (1 - e); });
