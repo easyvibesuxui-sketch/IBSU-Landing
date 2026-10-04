@@ -3,9 +3,10 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 // Story timeline, as fractions of the pinned scroll distance.
 const VIDEO_END = 0.78;           // video (or keyframe fallback) plays across 0 → VIDEO_END
-const SITE_ON = [0.785, 0.84];    // the firefly's light spreads over the laptop screen like ink, revealing the IBSU site
-const SCREEN = [0.84, 0.95];      // camera pushes into the screen, the site settles full-view
+const ZOOM = [0.785, 0.87];       // the camera pushes into the laptop screen, onto the firefly
+const INK = [0.87, 0.94];         // then the firefly's light spreads like ink and opens the IBSU site full view
 const CTA_ON = [0.93, 0.98];      // then the single Apply button arrives
+const ZOOM_OVER = 1.15;           // push past the screen edges so only the glowing screen is in view
 // Where the firefly lands on the screen (fraction of the screen box) and the ink blobs that grow
 // from it: [dx, dy, delay, speed] relative to the screen size, for an organic, uneven edge.
 const INK_ORIGIN = [0.5, 0.47];
@@ -26,8 +27,8 @@ const focusAt = (t) => {
   return x0 + (x1 - x0) * clamp01((t - t0) / (t1 - t0 || 1));
 };
 const CHAPTERS = [[0.01, 0.13], [0.15, 0.3], [0.32, 0.5], [0.54, 0.74]];
-// Resting points for the "sticky" scroll: top, each chapter at full strength, the lit laptop, the CTA
-export const SNAP_POINTS = [0, 0.07, 0.225, 0.41, 0.64, 0.8, 1];
+// Resting points for the "sticky" scroll: top, each chapter at full strength, the zoomed-in firefly, the CTA
+export const SNAP_POINTS = [0, 0.07, 0.225, 0.41, 0.64, 0.87, 1];
 const MEMORIES = [0.17, 0.5];      // core-memory orbs drift past while they grow up
 const AGE = [[0.15, 6], [0.6, 18]];
 
@@ -108,7 +109,7 @@ export function initStory({ reduced, onSiteState }) {
       if (video.seeking) { if (wasReady) render(lastP); return; }
       // Once the screen phase starts, jump straight to the last frame: the overlay and the
       // push-in are measured on it, and a lagging video would leave them floating off the screen.
-      shownTime = lastP >= SITE_ON[0] ? targetTime : shownTime + (targetTime - shownTime) * 0.18;
+      shownTime = lastP >= ZOOM[0] ? targetTime : shownTime + (targetTime - shownTime) * 0.18;
       if (Math.abs(video.currentTime - shownTime) > 1 / 60) video.currentTime = shownTime;
       if (endReady() !== wasReady) render(lastP);
     });
@@ -177,62 +178,56 @@ export function initStory({ reduced, onSiteState }) {
     // HUD
     const a = range(p, AGE[0][0], AGE[1][0]);
     age.textContent = String(Math.round(AGE[0][1] + a * (AGE[1][1] - AGE[0][1]))).padStart(2, '0');
-    bar.style.transform = `scaleX(${range(p, 0, SCREEN[0])})`;
+    bar.style.transform = `scaleX(${range(p, 0, ZOOM[0])})`;
     hint.style.opacity = 1 - range(p, 0, 0.03);
-    hud.style.opacity = 1 - range(p, SCREEN[0] - 0.04, SCREEN[0]);
+    hud.style.opacity = 1 - range(p, ZOOM[0] - 0.04, ZOOM[0]);
 
     // laptop screen → IBSU site. Frame→viewport mapping follows object-fit: cover + the pan above.
     const ox = -overflow * left, oy = (H - fh) / 2;
     const quad = SCREEN_QUAD.map(([x, y]) => [ox + x * fw, oy + y * fh]);
-    // Push in uniformly until the rectangle inscribed in the screen covers the viewport
+    // Push in uniformly until the rectangle inscribed in the screen covers the viewport (and a bit more)
     const ix0 = Math.max(quad[0][0], quad[3][0]), ix1 = Math.min(quad[1][0], quad[2][0]);
     const iy0 = Math.max(quad[0][1], quad[1][1]), iy1 = Math.min(quad[2][1], quad[3][1]);
-    const s = ready ? range(p, SCREEN[0], SCREEN[1]) : 0;
+    const s = ready ? range(p, ZOOM[0], ZOOM[1]) : 0;
     const e = gsap.parseEase('power3.inOut')(s);
-    const Z = lerp(1, Math.max(W / (ix1 - ix0), H / (iy1 - iy0)), e);
-    const cx = (ix0 + ix1) / 2, cy = (iy0 + iy1) / 2;
-    const tx = lerp(0, W / 2 - cx * Z, e) + (1 - e) * cx * (1 - Z), ty = lerp(0, H / 2 - cy * Z, e) + (1 - e) * cy * (1 - Z);
+    const Z = lerp(1, ZOOM_OVER * Math.max(W / (ix1 - ix0), H / (iy1 - iy0)), e);
+    // Aim at the firefly on the screen so it stays centred as the camera arrives
+    const fly = [lerp(lerp(quad[0][0], quad[1][0], INK_ORIGIN[0]), lerp(quad[3][0], quad[2][0], INK_ORIGIN[0]), INK_ORIGIN[1]),
+      lerp(lerp(quad[0][1], quad[3][1], INK_ORIGIN[1]), lerp(quad[1][1], quad[2][1], INK_ORIGIN[1]), INK_ORIGIN[0])];
+    const tx = lerp(0, W / 2 - fly[0] * Z, e) + (1 - e) * fly[0] * (1 - Z), ty = lerp(0, H / 2 - fly[1] * Z, e) + (1 - e) * fly[1] * (1 - Z);
     zoom.style.transform = s > 0 ? `translate(${tx}px, ${ty}px) scale(${Z})` : '';
-    // Screenshot rides the zoomed screen, then relaxes into an undistorted, fully visible frame
-    const onScreen = quad.map(([x, y]) => [tx + x * Z, ty + y * Z]);
-    // Anchored left where the headline lives: cover on landscape; on portrait, scale so the
-    // headline column (first ~480px of the shot) spans the viewport width.
+    const flyX = tx + fly[0] * Z, flyY = ty + fly[1] * Z; // the firefly, on screen
+
+    // The site opens directly in its final, undistorted full-view frame. Anchored left where the
+    // headline lives: cover on landscape; on portrait, the headline column spans the viewport width.
     const fitW = Math.max(W, Math.min(H * SHOT_ASPECT, W * 1902 / 480)), fitH = fitW / SHOT_ASPECT;
     const fx = 0, fy = (H - fitH) / 2;
     const target = [[fx, fy], [fx + fitW, fy], [fx + fitW, fy + fitH], [fx, fy + fitH]];
-    // Stay glued to the laptop screen while the camera pushes in; relax only once the screen
-    // already fills the viewport, so the site never floats over the people around it.
-    const settle = gsap.parseEase('power2.inOut')(range(s, 0.82, 1));
-    const shown = onScreen.map(([x, y], i) => [lerp(x, target[i][0], settle), lerp(y, target[i][1], settle)]);
-    const on = ready ? range(p, SITE_ON[0], SITE_ON[1]) : 0;
+    const on = ready && s >= 1 ? range(p, INK[0], INK[1]) : 0;
     screen.classList.toggle('is-live', on > 0);
     screen.style.opacity = on > 0 ? 1 : 0;
-    // Ink: soft-edged blobs grow from the firefly's landing point until they cover the screen box.
-    // Sized in on-screen pixels and stretched back into the W×H box, so they stay round on the
-    // laptop whatever the viewport's aspect ratio.
-    const qw = quad[1][0] - quad[0][0], qh = quad[3][1] - quad[0][1];
-    const reach = Math.hypot(qw, qh);
+    // Ink: soft-edged blobs grow from the firefly until they cover the whole viewport. Sized in
+    // viewport pixels and mapped into the screen element's W×H box (which spans fitW×fitH).
+    const kx = W / fitW, ky = H / fitH;
+    const reach = Math.hypot(W, H);
     const ink = INK_BLOBS.map(([dx, dy, d, sp]) => {
       const g = gsap.parseEase('power1.in')(clamp01((on - d) / (1 - d)));
-      const r = g * sp * reach * 0.62; // the main blob alone reaches the screen's far corners at g = 1
-      const soft = 4 + 10 * (1 - g);
-      const x = (INK_ORIGIN[0] + dx * g) * W, y = (INK_ORIGIN[1] + dy * g) * H;
-      const rx = ((r + soft) * W) / qw, ry = ((r + soft) * H) / qh;
+      const r = g * sp * reach * 1.05; // the main blob alone reaches the far corners at g = 1
+      const soft = 10 + 40 * (1 - g);
+      const x = (flyX + dx * g * W - fx) * kx, y = (flyY + dy * g * H - fy) * ky;
       const edge = (100 * r) / (r + soft || 1);
-      return `radial-gradient(${rx}px ${ry}px at ${x}px ${y}px, #000 ${edge}%, transparent 100%)`;
+      return `radial-gradient(${(r + soft) * kx}px ${(r + soft) * ky}px at ${x}px ${y}px, #000 ${edge}%, transparent 100%)`;
     }).join(',');
     const mask = on >= 1 ? 'none' : ink;
     screen.style.maskImage = mask;
     screen.style.webkitMaskImage = mask;
+    if (on > 0) screen.style.transform = glow.style.transform = quadMatrix(W, H, target);
     firefly.style.opacity = on > 0 && on < 1 ? 1 - on : 0;
-    firefly.style.setProperty('--x', `${INK_ORIGIN[0] * 100}%`);
-    firefly.style.setProperty('--y', `${INK_ORIGIN[1] * 100}%`);
-    if (on > 0) screen.style.transform = glow.style.transform = quadMatrix(W, H, shown);
-    // Rounded, feathered edges while the site sits on the laptop screen; sharp once it is full view
-    screen.style.setProperty('--feather', `${(1 - settle) * Math.min(W, H) * 0.06}px`);
-    screen.classList.toggle('is-full', settle > 0.3); // drop the hand hole once the site leaves the laptop
+    firefly.style.setProperty('--x', `${((flyX - fx) / fitW) * 100}%`);
+    firefly.style.setProperty('--y', `${((flyY - fy) / fitH) * 100}%`);
     glow.classList.toggle('is-live', on > 0 && on < 1);
-    backdrop.style.opacity = clamp01(settle * 2.5);
+    // Navy fills any space above/below the site on tall screens once the ink has spread
+    backdrop.style.opacity = clamp01((on - 0.6) / 0.4);
     overlays.forEach((o) => { o.style.opacity = (o.classList.contains('story__grain') ? 0.07 : 1) * (1 - e); });
     const c = range(p, CTA_ON[0], CTA_ON[1]);
     cta.style.opacity = c;
@@ -241,7 +236,7 @@ export function initStory({ reduced, onSiteState }) {
     cta.style.transform = `translate3d(0, ${(1 - c) * 24}px, 0)`;
     cta.inert = c < 0.5;
 
-    const next = s >= 0.98 ? 'site' : 'story';
+    const next = on >= 0.98 ? 'site' : 'story';
     if (next !== siteState) { siteState = next; onSiteState(next); }
   }
 
