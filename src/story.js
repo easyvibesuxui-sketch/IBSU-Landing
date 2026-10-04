@@ -75,6 +75,8 @@ export function initStory({ reduced, onSiteState }) {
   const backdrop = story.querySelector('[data-backdrop]');
   const firefly = story.querySelector('[data-firefly]');
   const glow = story.querySelector('[data-glow]');
+  const front = story.querySelector('[data-front]');
+  const plate = front.querySelector('img');
   const cta = story.querySelector('[data-cta]');
   const zoom = story.querySelector('[data-zoom]');
   const overlays = [...story.querySelectorAll('.story__grain, .story__vignette')];
@@ -142,6 +144,7 @@ export function initStory({ reduced, onSiteState }) {
     const left = overflow ? clamp01((focusAt(vp) * fw - W / 2) / overflow) : 0.5; // object-position x
     const pos = `${left * 100}% 50%`;
     video.style.objectPosition = pos;
+    plate.style.objectPosition = pos;
     frames.forEach((img) => { img.style.objectPosition = pos; });
     if (hasVideo && video.duration) targetTime = vp * (video.duration - 0.05);
     if (!hasVideo) {
@@ -193,6 +196,7 @@ export function initStory({ reduced, onSiteState }) {
     const cx = (ix0 + ix1) / 2, cy = (iy0 + iy1) / 2;
     const tx = lerp(0, W / 2 - cx * Z, e) + (1 - e) * cx * (1 - Z), ty = lerp(0, H / 2 - cy * Z, e) + (1 - e) * cy * (1 - Z);
     zoom.style.transform = s > 0 ? `translate(${tx}px, ${ty}px) scale(${Z})` : '';
+    front.style.transform = zoom.style.transform;
     // Screenshot rides the zoomed screen, then relaxes into an undistorted, fully visible frame
     const onScreen = quad.map(([x, y]) => [tx + x * Z, ty + y * Z]);
     // Anchored left where the headline lives: cover on landscape; on portrait, scale so the
@@ -207,13 +211,19 @@ export function initStory({ reduced, onSiteState }) {
     const on = ready ? range(p, SITE_ON[0], SITE_ON[1]) : 0;
     screen.classList.toggle('is-live', on > 0);
     screen.style.opacity = on > 0 ? 1 : 0;
-    // Ink: soft-edged circles grow from the firefly's landing point until they cover the screen box
-    const reach = Math.hypot(W, H);
+    // Ink: soft-edged blobs grow from the firefly's landing point until they cover the screen box.
+    // Sized in on-screen pixels and stretched back into the W×H box, so they stay round on the
+    // laptop whatever the viewport's aspect ratio.
+    const qw = quad[1][0] - quad[0][0], qh = quad[3][1] - quad[0][1];
+    const reach = Math.hypot(qw, qh);
     const ink = INK_BLOBS.map(([dx, dy, d, sp]) => {
       const g = gsap.parseEase('power1.in')(clamp01((on - d) / (1 - d)));
       const r = g * sp * reach * 0.62; // the main blob alone reaches the screen's far corners at g = 1
+      const soft = 4 + 10 * (1 - g);
       const x = (INK_ORIGIN[0] + dx * g) * W, y = (INK_ORIGIN[1] + dy * g) * H;
-      return `radial-gradient(circle at ${x}px ${y}px, #000 ${r}px, transparent ${r + 18 + 40 * (1 - g)}px)`;
+      const rx = ((r + soft) * W) / qw, ry = ((r + soft) * H) / qh;
+      const edge = (100 * r) / (r + soft || 1);
+      return `radial-gradient(${rx}px ${ry}px at ${x}px ${y}px, #000 ${edge}%, transparent 100%)`;
     }).join(',');
     const mask = on >= 1 ? 'none' : ink;
     screen.style.maskImage = mask;
@@ -225,6 +235,7 @@ export function initStory({ reduced, onSiteState }) {
     // Rounded, feathered edges while the site sits on the laptop screen; sharp once it is full view
     screen.style.setProperty('--feather', `${(1 - settle) * Math.min(W, H) * 0.06}px`);
     glow.classList.toggle('is-live', on > 0 && on < 1);
+    front.style.opacity = on > 0 ? 1 - settle : 0;
     backdrop.style.opacity = clamp01(settle * 2.5);
     overlays.forEach((o) => { o.style.opacity = (o.classList.contains('story__grain') ? 0.07 : 1) * (1 - e); });
     const c = range(p, CTA_ON[0], CTA_ON[1]);
