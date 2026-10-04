@@ -8,17 +8,17 @@ const SCREEN = [0.84, 0.95];      // camera pushes into the screen, the site set
 const CTA_ON = [0.93, 0.98];      // then the single Apply button arrives
 // Where the firefly lands on the screen (fraction of the screen box) and the ink blobs that grow
 // from it: [dx, dy, delay, speed] relative to the screen size, for an organic, uneven edge.
-const INK_ORIGIN = [0.5, 0.45];
+const INK_ORIGIN = [0.5, 0.47];
 const INK_BLOBS = [[0, 0, 0, 1], [0.12, -0.08, 0.08, 0.9], [-0.14, 0.1, 0.12, 0.85], [0.2, 0.18, 0.22, 0.8], [-0.22, -0.16, 0.26, 0.8], [0.04, 0.3, 0.3, 0.75], [-0.3, 0.32, 0.4, 0.7], [0.34, -0.3, 0.42, 0.7]];
 // Laptop screen corners (TL, TR, BR, BL) in the final video frame, as fractions of the 16:9 frame.
 // Measured on story-1080's last frame.
-const SCREEN_QUAD = [[0.3674, 0.4546], [0.5258, 0.4611], [0.535, 0.6551], [0.3797, 0.656]];
+const SCREEN_QUAD = [[0.3714, 0.4046], [0.6438, 0.4046], [0.6438, 0.7065], [0.3714, 0.7065]];
 const SHOT_ASPECT = 1902 / 840;   // hero-screenshot.webp (nav bar cropped, its buttons painted out)
 const SHOT_BUTTON = [75 / 1902, 700 / 840]; // where the screenshot's own CTA sat — ours takes its place
 const FRAME_ASPECT = 16 / 9;
 // Where the subject is (x as a fraction of the frame) over video time 0 → 1. On narrow screens
-// object-fit: cover crops most of the 16:9 frame, so the visible window follows him.
-const FOCUS = [[0, 0.27], [0.2, 0.36], [0.25, 0.38], [0.5, 0.47], [0.75, 0.5], [0.8, 0.55], [0.86, 0.62], [0.93, 0.58], [1, 0.45]];
+// object-fit: cover crops most of the 16:9 frame, so the visible window follows the two friends.
+const FOCUS = [[0, 0.25], [0.2, 0.26], [0.4, 0.32], [0.6, 0.36], [0.75, 0.45], [0.85, 0.5], [1, 0.5]];
 const focusAt = (t) => {
   const i = Math.max(1, FOCUS.findIndex(([k]) => k >= t));
   const [t0, x0] = FOCUS[i - 1], [t1, x1] = FOCUS[i];
@@ -207,8 +207,8 @@ export function initStory({ reduced, onSiteState }) {
     // Ink: soft-edged circles grow from the firefly's landing point until they cover the screen box
     const reach = Math.hypot(W, H);
     const ink = INK_BLOBS.map(([dx, dy, d, sp]) => {
-      const g = gsap.parseEase('power2.out')(clamp01((on - d) / (1 - d)));
-      const r = g * sp * reach * 1.1;
+      const g = gsap.parseEase('power1.in')(clamp01((on - d) / (1 - d)));
+      const r = g * sp * reach * 0.62; // the main blob alone reaches the screen's far corners at g = 1
       const x = (INK_ORIGIN[0] + dx * g) * W, y = (INK_ORIGIN[1] + dy * g) * H;
       return `radial-gradient(circle at ${x}px ${y}px, #000 ${r}px, transparent ${r + 18 + 40 * (1 - g)}px)`;
     }).join(',');
