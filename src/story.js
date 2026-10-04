@@ -3,10 +3,11 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 // Story timeline, as fractions of the pinned scroll distance.
 const VIDEO_END = 0.78;           // video (or keyframe fallback) plays across 0 → VIDEO_END
-const ZOOM = [0.785, 0.87];       // the camera pushes into the laptop screen, onto the firefly
-const INK = [0.87, 0.94];         // then the firefly's light spreads like ink and opens the IBSU site full view
-const CTA_ON = [0.93, 0.98];      // then the single Apply button arrives
-const ZOOM_OVER = 1.15;           // push past the screen edges so only the glowing screen is in view
+const ZOOM = [0.785, 0.85];       // the camera pushes in until the screen fills the view, faces at the edges
+const INK = [0.85, 0.93];         // from there the firefly's light spreads like ink and opens the IBSU site full view
+const CTA_ON = [0.92, 0.98];      // then the single Apply button arrives
+const ZOOM_FRAME = 0.88;          // screen share of the viewport when the ink starts (the friends still framing it)
+const ZOOM_OVER = 1.15;           // while the ink spreads the camera drifts on past the screen edges
 // Where the firefly lands on the screen (fraction of the screen box) and the ink blobs that grow
 // from it: [dx, dy, delay, speed] relative to the screen size, for an organic, uneven edge.
 const INK_ORIGIN = [0.5, 0.47];
@@ -28,7 +29,7 @@ const focusAt = (t) => {
 };
 const CHAPTERS = [[0.01, 0.13], [0.15, 0.3], [0.32, 0.5], [0.54, 0.74]];
 // Resting points for the "sticky" scroll: top, each chapter at full strength, the zoomed-in firefly, the CTA
-export const SNAP_POINTS = [0, 0.07, 0.225, 0.41, 0.64, 0.87, 1];
+export const SNAP_POINTS = [0, 0.07, 0.225, 0.41, 0.64, 0.85, 1];
 const MEMORIES = [0.17, 0.5];      // core-memory orbs drift past while they grow up
 const AGE = [[0.15, 6], [0.6, 18]];
 
@@ -190,7 +191,10 @@ export function initStory({ reduced, onSiteState }) {
     const iy0 = Math.max(quad[0][1], quad[1][1]), iy1 = Math.min(quad[2][1], quad[3][1]);
     const s = ready ? range(p, ZOOM[0], ZOOM[1]) : 0;
     const e = gsap.parseEase('power3.inOut')(s);
-    const Z = lerp(1, ZOOM_OVER * Math.max(W / (ix1 - ix0), H / (iy1 - iy0)), e);
+    const sw = ix1 - ix0, sh = iy1 - iy0;
+    const Z1 = Math.max(1.3, ZOOM_FRAME * Math.min(W / sw, H / sh)), Z2 = ZOOM_OVER * Math.max(W / sw, H / sh, Z1 / ZOOM_OVER);
+    const drift = ready && s >= 1 ? gsap.parseEase('power2.out')(range(p, INK[0], INK[1])) : 0;
+    const Z = lerp(lerp(1, Z1, e), Z2, drift);
     // Aim at the firefly on the screen so it stays centred as the camera arrives
     const fly = [lerp(lerp(quad[0][0], quad[1][0], INK_ORIGIN[0]), lerp(quad[3][0], quad[2][0], INK_ORIGIN[0]), INK_ORIGIN[1]),
       lerp(lerp(quad[0][1], quad[3][1], INK_ORIGIN[1]), lerp(quad[1][1], quad[2][1], INK_ORIGIN[1]), INK_ORIGIN[0])];
