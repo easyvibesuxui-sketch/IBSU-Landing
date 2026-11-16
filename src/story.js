@@ -27,9 +27,10 @@ const focusAt = (t) => {
   const [t0, x0] = FOCUS[i - 1], [t1, x1] = FOCUS[i];
   return x0 + (x1 - x0) * clamp01((t - t0) / (t1 - t0 || 1));
 };
-const CHAPTERS = [[0.01, 0.13], [0.15, 0.3], [0.32, 0.5], [0.54, 0.74]];
-// Resting points for the "sticky" scroll: top, each chapter at full strength, the zoomed-in firefly, the CTA
-export const SNAP_POINTS = [0, 0.07, 0.225, 0.41, 0.64, 0.78, 0.85, 1];
+const CHAPTERS = [[0.01, 0.13], [0.15, 0.3], [0.32, 0.48], [0.54, 0.7]];
+// Resting points for the "sticky" scroll: chapters at full strength, clean frames between them (no half-faded
+// text, no transition flashes), the laptop, the zoomed-in firefly, and the site with its CTA
+export const SNAP_POINTS = [0, 0.07, 0.156, 0.225, 0.312, 0.41, 0.49, 0.6, 0.72, 0.78, 0.85, 1];
 const MEMORIES = [0.17, 0.5];      // core-memory orbs drift past while they grow up
 const AGE = [[0.15, 6], [0.6, 18]];
 
